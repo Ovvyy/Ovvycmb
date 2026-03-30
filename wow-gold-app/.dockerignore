@@ -5,6 +5,8 @@ release
 .gitignore
 *.md
 electron/
-deploy/
+deploy/*.sh
+deploy/*.md
+deploy/nginx-host.conf
 .env*
 *.log
