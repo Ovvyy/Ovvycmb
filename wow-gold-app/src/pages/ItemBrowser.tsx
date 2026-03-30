@@ -299,13 +299,13 @@ export function ItemBrowser() {
                     </Button>
                   </a>
                   <a
-                    href={`https://theunderminejournal.com/#eu/ravencrest/item/${selectedItem.id}`}
+                    href={`https://www.wowaudit.com/items/${selectedItem.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1"
                   >
                     <Button variant="outline" size="sm" className="w-full">
-                      📊 TUJ
+                      📊 WoWAudit
                     </Button>
                   </a>
                 </div>

@@ -1,101 +1,44 @@
 /**
- * The Undermine Journal (TUJ) API client
- * Docs: https://theunderminejournal.com/#api
- * Base: https://theunderminejournal.com/api/
- * No authentication required for public data.
+ * The Undermine Journal (TUJ) — PERMANENTLY OFFLINE since 2023
+ *
+ * TUJ operated from 2010 to 2023 and is no longer available.
+ * The open-source backend (Newsstand) is available at:
+ * https://github.com/erorus/newsstand
+ *
+ * For retail WoW price data, use the Blizzard Battle.net AH API:
+ * - Per-realm items:    GET /data/wow/connected-realm/{id}/auctions?namespace=dynamic-us
+ * - Commodities (herbs, ore, cloth): GET /data/wow/auctions/commodities?namespace=dynamic-us
+ *
+ * This file is kept as a stub for historical reference only.
+ * All functions return empty/null results.
  */
-
-import axios from 'axios'
-import type { TUJItem } from '@/types'
-
-const BASE = 'https://theunderminejournal.com/api'
-
-const client = axios.create({ baseURL: BASE, timeout: 10000 })
-
-export interface TUJRealm {
-  name: string
-  slug: string
-  locale: string
-  timezone: string
-}
 
 export interface TUJPriceData {
   item: number
   name: string
-  slug: string
   quantity: number
   minbuying: number
   marketprice: number
   historical: number
-  globalMedian: number
-  globalMean: number
-  globalStdDev: number
   lastseen: number
 }
 
-export interface TUJCraftingResult {
-  item: number
-  name: string
-  cost: number
-  market: number
-  profit: number
-}
-
-/** Fetch item price from The Undermine Journal */
+/** @deprecated TUJ is permanently offline. Use Blizzard API instead. */
 export async function fetchTUJItemPrice(
-  realm: string,
-  region: string,
-  itemId: number
+  _realm: string,
+  _region: string,
+  _itemId: number
 ): Promise<TUJPriceData | null> {
-  try {
-    const { data } = await client.get<TUJPriceData>(`/item.php`, {
-      params: { region, realm, item: itemId },
-    })
-    return data
-  } catch {
-    return null
-  }
+  console.warn('TUJ API is permanently offline. Use Blizzard Battle.net API for retail price data.')
+  return null
 }
 
-/** Search items on TUJ */
+/** @deprecated TUJ is permanently offline. */
 export async function searchTUJItems(
-  realm: string,
-  region: string,
-  query: string
-): Promise<TUJItem[]> {
-  try {
-    const { data } = await client.get<TUJItem[]>(`/search.php`, {
-      params: { region, realm, q: query },
-    })
-    return Array.isArray(data) ? data : []
-  } catch {
-    return []
-  }
-}
-
-/** Get list of realms */
-export async function fetchTUJRealms(region: string): Promise<TUJRealm[]> {
-  try {
-    const { data } = await client.get<TUJRealm[]>(`/realms.php`, {
-      params: { region },
-    })
-    return Array.isArray(data) ? data : []
-  } catch {
-    return []
-  }
-}
-
-/** Get market movers (biggest price changes) */
-export async function fetchMarketMovers(
-  realm: string,
-  region: string
+  _realm: string,
+  _region: string,
+  _query: string
 ): Promise<TUJPriceData[]> {
-  try {
-    const { data } = await client.get<TUJPriceData[]>(`/movers.php`, {
-      params: { region, realm, limit: 20 },
-    })
-    return Array.isArray(data) ? data : []
-  } catch {
-    return []
-  }
+  console.warn('TUJ API is permanently offline.')
+  return []
 }

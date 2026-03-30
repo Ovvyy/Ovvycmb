@@ -19,7 +19,7 @@ const defaultSettings: AppSettings = {
   minRoi: 10,
   showDeprecated: false,
   theme: 'dark',
-  expansion: 'war-within',
+  expansion: 'midnight',
 }
 
 export const useSettingsStore = create<SettingsStore>()(

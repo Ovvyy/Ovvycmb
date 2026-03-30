@@ -191,18 +191,18 @@ export function Dashboard() {
         </Card>
       </div>
 
-      {/* Expansion Banner */}
+      {/* Midnight Banner */}
       <div className="mt-6 rounded-xl border border-wow-gold/20 bg-gradient-to-r from-wow-gold/5 via-transparent to-wow-gold/5 p-5 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <span className="text-4xl animate-float">🌑</span>
           <div>
-            <h3 className="font-wow text-wow-gold font-bold">WoW Midnight — Préparez-vous !</h3>
+            <h3 className="font-wow text-wow-gold font-bold">WoW Midnight — Quel'Thalas vous attend !</h3>
             <p className="text-sm text-slate-400 mt-0.5">
-              Stockez des matériaux maintenant avant la sortie. L'app sera mise à jour dès le lancement.
+              Extension sortie le 2 mars 2026 · Saison 1 active · Nouvelles herbes, minerais et gems à tracker
             </p>
           </div>
         </div>
-        <Link to="/strategies?filter=midnight">
+        <Link to="/strategies">
           <Button variant="gold" size="sm">Stratégies Midnight</Button>
         </Link>
       </div>

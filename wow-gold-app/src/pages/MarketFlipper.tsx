@@ -291,12 +291,12 @@ export function MarketFlipper() {
                     <Button variant="outline" size="sm" className="w-full">📖 Wowhead</Button>
                   </a>
                   <a
-                    href={`https://theunderminejournal.com/#eu/ravencrest/item/${selected.itemId}`}
+                    href={`https://www.wowaudit.com/items/${selected.itemId}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1"
                   >
-                    <Button variant="outline" size="sm" className="w-full">📊 TUJ</Button>
+                    <Button variant="outline" size="sm" className="w-full">📊 WoWAudit</Button>
                   </a>
                 </div>
               </Card>

@@ -30,9 +30,9 @@ export function Settings() {
   ]
 
   const EXPANSIONS = [
-    { value: 'war-within',  label: 'The War Within (actuel)' },
-    { value: 'midnight',    label: '🌑 Midnight (prochain)' },
-    { value: 'dragonflight', label: 'Dragonflight (précédent)' },
+    { value: 'midnight',     label: '🌑 Midnight (actuel — mars 2026)' },
+    { value: 'war-within',   label: 'The War Within (précédent)' },
+    { value: 'dragonflight', label: 'Dragonflight' },
   ]
 
   return (
@@ -204,8 +204,8 @@ export function Settings() {
                 <p className="text-white">The War Within / Midnight</p>
               </div>
               <div>
-                <p className="text-slate-500">Sources de données</p>
-                <p className="text-white">Nexushub · TUJ · Blizzard API</p>
+                <p className="text-slate-500">Source de données</p>
+                <p className="text-white">Blizzard Battle.net AH API</p>
               </div>
               <div>
                 <p className="text-slate-500">Mode</p>

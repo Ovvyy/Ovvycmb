@@ -1,89 +1,106 @@
 /**
- * Nexushub API client
- * Docs: https://nexushub.co/
- * Base: https://api.nexushub.co/wow/
+ * Nexushub API client — WoW CLASSIC only
+ * Docs: https://nexushub.co/developers/api
+ * Base: https://api.nexushub.co/wow-classic/v1/
  * No authentication required.
+ *
+ * NOTE: Nexushub covers WoW Classic realms ONLY (not retail/Midnight).
+ * For retail price data, use the Blizzard Battle.net AH API directly.
  */
 
 import axios from 'axios'
-import type { NexushubItem } from '@/types'
 
-const BASE = 'https://api.nexushub.co/wow'
+const BASE = 'https://api.nexushub.co/wow-classic/v1'
 
 const client = axios.create({ baseURL: BASE, timeout: 10000 })
 
 export interface NexushubServer {
-  slug: string
+  slug: string   // e.g. "firemaw-alliance"
   name: string
-  region: string
-  faction?: string
-  locale?: string
+  region: 'EU' | 'US'
+  faction: 'alliance' | 'horde'
 }
 
-/** List all available servers */
-export async function fetchServers(): Promise<NexushubServer[]> {
-  const { data } = await client.get<NexushubServer[]>('/servers')
-  return data
-}
-
-/** Get item prices on a specific server+faction combo */
-export async function fetchItemPrice(
-  server: string,
-  faction: 'alliance' | 'horde',
+export interface NexushubItemData {
+  slug: string
   itemId: number
-): Promise<NexushubItem | null> {
+  name: string
+  uniqueName: string
+  stats?: {
+    current?: {
+      marketValue: number
+      minBuyout: number
+      quantity: number
+    }
+    previous?: {
+      marketValue: number
+      minBuyout: number
+    }
+  }
+  icon?: string
+  tags?: string[]
+  requiredLevel?: number
+  itemLevel?: number
+  sell_price?: number
+}
+
+export interface NexushubPricePoint {
+  marketValue: number
+  minBuyout: number
+  quantity: number
+  scannedAt: string
+}
+
+/** Get list of available Classic servers grouped by region */
+export async function fetchClassicServers(): Promise<{ EU: string[]; US: string[] }> {
   try {
-    const slug = `${server}-${faction}`
-    const { data } = await client.get<NexushubItem>(`/items/${slug}/${itemId}`)
+    const { data } = await client.get<{ EU: string[]; US: string[] }>('/servers')
+    return data
+  } catch {
+    return { EU: [], US: [] }
+  }
+}
+
+/** Get current item price on a Classic server (slug: "firemaw-horde") */
+export async function fetchClassicItemPrice(
+  server: string,
+  itemId: number
+): Promise<NexushubItemData | null> {
+  try {
+    const { data } = await client.get<NexushubItemData>(`/items/${server}/${itemId}`)
     return data
   } catch {
     return null
   }
 }
 
-/** Search items by name on Nexushub */
-export async function searchItems(
+/** Get price history for an item on a Classic server */
+export async function fetchClassicPriceHistory(
   server: string,
-  faction: 'alliance' | 'horde',
+  itemId: number,
+  timerange = 30
+): Promise<NexushubPricePoint[]> {
+  try {
+    const { data } = await client.get<{ data: NexushubPricePoint[] }>(
+      `/items/${server}/${itemId}/prices`,
+      { params: { timerange } }
+    )
+    return Array.isArray(data?.data) ? data.data : []
+  } catch {
+    return []
+  }
+}
+
+/** Search items by name on a Classic server */
+export async function searchClassicItems(
+  server: string,
   query: string
-): Promise<NexushubItem[]> {
+): Promise<NexushubItemData[]> {
   try {
-    const slug = `${server}-${faction}`
-    const { data } = await client.get<NexushubItem[]>(`/items/${slug}`, {
-      params: { search: query, limit: 50 },
-    })
-    return Array.isArray(data) ? data : []
-  } catch {
-    return []
-  }
-}
-
-/** Get top items by value for a server */
-export async function fetchTopItems(
-  server: string,
-  faction: 'alliance' | 'horde',
-  limit = 20
-): Promise<NexushubItem[]> {
-  try {
-    const slug = `${server}-${faction}`
-    const { data } = await client.get<NexushubItem[]>(`/items/${slug}`, {
-      params: { orderBy: 'marketValue', limit },
-    })
-    return Array.isArray(data) ? data : []
-  } catch {
-    return []
-  }
-}
-
-/** Get price history for an item */
-export async function fetchPriceHistory(
-  server: string,
-  faction: 'alliance' | 'horde',
-  itemId: number
-): Promise<{ scannedAt: string; data: { marketValue: number; minBuyout: number; quantity: number }[] }[]> {
-  try {
-    const slug = `${server}-${faction}`
-    const { data } = await client.get(`/items/${slug}/${itemId}/prices`)
+    const { data } = await client.get<NexushubItemData[]>(
+      `/search/${server}`,
+      { params: { query } }
+    )
     return Array.isArray(data) ? data : []
   } catch {
     return []

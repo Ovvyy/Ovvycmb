@@ -69,10 +69,10 @@ export function Sidebar() {
       {/* Footer */}
       <div className="px-4 py-3 border-t border-wow-border/50 space-y-1">
         <p className="text-[10px] text-slate-600 text-center">
-          Données: Nexushub • TUJ • Blizzard API
+          Données: Blizzard AH API (Midnight)
         </p>
         <p className="text-[10px] text-slate-700 text-center">
-          WoW The War Within / Midnight Ready
+          WoW Midnight — Quel'Thalas 🌑
         </p>
       </div>
     </aside>

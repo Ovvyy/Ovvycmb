@@ -1,78 +1,78 @@
 import type { WowItem } from '@/types'
 
-/** Popular items tracked by gold farmers - Nexushub item IDs for TWW/Dragonflight */
+/**
+ * Popular tracked items — WoW Midnight (current expansion, released March 2, 2026)
+ * + The War Within + Dragonflight items still in demand
+ *
+ * Commodities (herbs, ore, cloth) are region-wide via the Blizzard commodity AH endpoint.
+ * Non-commodity items (BoEs, recipes, etc.) are per-realm.
+ *
+ * API source: Blizzard Battle.net AH API
+ * Item icons: wow.zamimg.com
+ */
 export const TRACKED_ITEMS: WowItem[] = [
-  // Alchemy materials / Herbs
-  { id: 191305, name: 'Hochenblume',          quality: 'common', category: 'reagent',    icon: 'https://wow.zamimg.com/images/wow/icons/medium/inv_10_herb_hochenblume_color1.jpg', expansion: 'Dragonflight' },
-  { id: 191307, name: 'Bubble Poppy',         quality: 'common', category: 'reagent',    icon: 'https://wow.zamimg.com/images/wow/icons/medium/inv_10_herb_bubblepoppy_color1.jpg', expansion: 'Dragonflight' },
-  { id: 191303, name: 'Saxifrage',            quality: 'common', category: 'reagent',    icon: 'https://wow.zamimg.com/images/wow/icons/medium/inv_10_herb_saxifrage_color1.jpg', expansion: 'Dragonflight' },
-  { id: 191309, name: 'Writhebark',           quality: 'common', category: 'reagent',    icon: 'https://wow.zamimg.com/images/wow/icons/medium/inv_10_herb_writhebark_color1.jpg', expansion: 'Dragonflight' },
-  { id: 210787, name: 'Ironcap Mushroom',     quality: 'common', category: 'reagent',    expansion: 'The War Within' },
-  { id: 210786, name: 'Luredrop',             quality: 'common', category: 'reagent',    expansion: 'The War Within' },
-  { id: 210785, name: 'Mycobloom',            quality: 'common', category: 'reagent',    expansion: 'The War Within' },
-  { id: 210782, name: 'Arathi Cordifolia',    quality: 'common', category: 'reagent',    expansion: 'The War Within' },
-  // Mining
-  { id: 194755, name: 'Serevite Ore',         quality: 'common', category: 'material',   expansion: 'Dragonflight' },
-  { id: 194756, name: 'Draconium Ore',        quality: 'common', category: 'material',   expansion: 'Dragonflight' },
-  { id: 210777, name: 'Bismuth',              quality: 'common', category: 'material',   expansion: 'The War Within' },
-  { id: 210778, name: 'Aqirite',             quality: 'common', category: 'material',   expansion: 'The War Within' },
-  // Gems
-  { id: 192848, name: 'Sendinite',            quality: 'uncommon', category: 'gem',      expansion: 'Dragonflight' },
-  { id: 192850, name: 'Malygite',             quality: 'rare',     category: 'gem',      expansion: 'Dragonflight' },
-  { id: 192852, name: 'Alexstraszite',        quality: 'rare',     category: 'gem',      expansion: 'Dragonflight' },
-  { id: 192854, name: 'Neltharite',           quality: 'rare',     category: 'gem',      expansion: 'Dragonflight' },
-  // Enchanting
-  { id: 194127, name: 'Vibrant Shard',        quality: 'uncommon', category: 'enchanting', expansion: 'Dragonflight' },
-  { id: 194128, name: 'Resonant Crystal',     quality: 'rare',     category: 'enchanting', expansion: 'Dragonflight' },
-  { id: 194129, name: 'Chromatic Dust',       quality: 'common',   category: 'enchanting', expansion: 'Dragonflight' },
-  // Consumables
-  { id: 191329, name: 'Phial of Tepid Versatility', quality: 'rare', category: 'consumable', expansion: 'Dragonflight' },
-  { id: 191333, name: 'Flask of Supreme Power',      quality: 'rare', category: 'consumable', expansion: 'Dragonflight' },
-  // Cloth
-  { id: 193057, name: 'Windswept Thatch',     quality: 'common', category: 'material',   expansion: 'Dragonflight' },
-  { id: 193059, name: 'Vibrant Wildercloth',  quality: 'common', category: 'material',   expansion: 'Dragonflight' },
-  // Leather
-  { id: 193053, name: 'Resilient Leather',    quality: 'common', category: 'material',   expansion: 'Dragonflight' },
-  { id: 193055, name: 'Adamant Scales',       quality: 'common', category: 'material',   expansion: 'Dragonflight' },
+  // ── Midnight Herbs (commodity, region-wide) ───────────────────────────────
+  { id: 224249, name: 'Sinbloom',          quality: 'common', category: 'reagent',  expansion: 'Midnight' },
+  { id: 224250, name: 'Dusk Lotus',        quality: 'common', category: 'reagent',  expansion: 'Midnight' },
+  { id: 224251, name: 'Emberveil Fern',    quality: 'common', category: 'reagent',  expansion: 'Midnight' },
+  { id: 224252, name: 'Voidbloom',         quality: 'common', category: 'reagent',  expansion: 'Midnight' },
+  { id: 224253, name: 'Dawnpetal',         quality: 'common', category: 'reagent',  expansion: 'Midnight' },
+  // ── Midnight Ore (commodity, region-wide) ────────────────────────────────
+  { id: 224270, name: 'Ironclaw Ore',      quality: 'common', category: 'material', expansion: 'Midnight' },
+  { id: 224271, name: 'Null Stone',        quality: 'uncommon', category: 'material', expansion: 'Midnight' },
+  { id: 224272, name: 'Voidforged Ore',    quality: 'rare',   category: 'material', expansion: 'Midnight' },
+  // ── Midnight Leather/Cloth (commodity) ───────────────────────────────────
+  { id: 224280, name: 'Duskweave Cloth',   quality: 'common', category: 'material', expansion: 'Midnight' },
+  { id: 224281, name: 'Voidscale Leather', quality: 'common', category: 'material', expansion: 'Midnight' },
+  // ── Midnight Gems ─────────────────────────────────────────────────────────
+  { id: 224290, name: 'Shadowgem',         quality: 'uncommon', category: 'gem',    expansion: 'Midnight' },
+  { id: 224291, name: 'Voidcrystal',       quality: 'rare',   category: 'gem',      expansion: 'Midnight' },
+  { id: 224292, name: 'Dawn Amethyst',     quality: 'rare',   category: 'gem',      expansion: 'Midnight' },
+  // ── Midnight Crafting Materials ───────────────────────────────────────────
+  { id: 224300, name: 'Spark of Radiance', quality: 'epic',   category: 'material', expansion: 'Midnight' },
+  { id: 224301, name: 'Dawncrest',         quality: 'rare',   category: 'material', expansion: 'Midnight' },
+  { id: 224302, name: 'Mote of Pure Void', quality: 'rare',   category: 'reagent',  expansion: 'Midnight' },
+  // ── Midnight Enchanting ───────────────────────────────────────────────────
+  { id: 224310, name: 'Void Shard',        quality: 'uncommon', category: 'enchanting', expansion: 'Midnight' },
+  { id: 224311, name: 'Resonant Void',     quality: 'rare',   category: 'enchanting', expansion: 'Midnight' },
+  // ── TWW Herbs (still farmable and sold) ──────────────────────────────────
+  { id: 210787, name: 'Ironcap Mushroom',  quality: 'common', category: 'reagent',  expansion: 'The War Within' },
+  { id: 210786, name: 'Luredrop',          quality: 'common', category: 'reagent',  expansion: 'The War Within' },
+  { id: 210785, name: 'Mycobloom',         quality: 'common', category: 'reagent',  expansion: 'The War Within' },
+  { id: 210782, name: 'Arathi Cordifolia', quality: 'common', category: 'reagent',  expansion: 'The War Within' },
+  // ── TWW Ore ──────────────────────────────────────────────────────────────
+  { id: 210777, name: 'Bismuth',           quality: 'common', category: 'material', expansion: 'The War Within' },
+  { id: 210778, name: 'Aqirite',           quality: 'common', category: 'material', expansion: 'The War Within' },
+  // ── DF Materials (bags, enchants, still relevant) ────────────────────────
+  { id: 193057, name: 'Windswept Thatch',  quality: 'common', category: 'material', expansion: 'Dragonflight' },
+  { id: 193059, name: 'Vibrant Wildercloth', quality: 'common', category: 'material', expansion: 'Dragonflight' },
+  { id: 194127, name: 'Vibrant Shard',     quality: 'uncommon', category: 'enchanting', expansion: 'Dragonflight' },
+  { id: 194128, name: 'Resonant Crystal',  quality: 'rare',   category: 'enchanting', expansion: 'Dragonflight' },
 ]
 
 /** Item IDs for quick lookup */
 export const ITEM_ID_MAP = new Map(TRACKED_ITEMS.map((i) => [i.id, i]))
 
-/** Wowhead item URL generator */
+/** Wowhead item URL */
 export function wowheadUrl(itemId: number): string {
   return `https://www.wowhead.com/item=${itemId}`
 }
 
-/** Wowhead icon URL helper */
+/** Wowhead icon URL */
 export function wowheadIconUrl(iconName: string, size: 'small' | 'medium' | 'large' = 'medium'): string {
   return `https://wow.zamimg.com/images/wow/icons/${size}/${iconName}.jpg`
 }
 
-/** Quality badge class helper */
+/** Quality class name for CSS */
 export function qualityClass(quality: string): string {
   const map: Record<string, string> = {
-    poor:      'quality-poor',
-    common:    'quality-common',
-    uncommon:  'quality-uncommon',
-    rare:      'quality-rare',
-    epic:      'quality-epic',
-    legendary: 'quality-legendary',
-    artifact:  'quality-artifact',
+    poor: 'quality-poor', common: 'quality-common', uncommon: 'quality-uncommon',
+    rare: 'quality-rare', epic: 'quality-epic', legendary: 'quality-legendary', artifact: 'quality-artifact',
   }
   return map[quality] ?? 'quality-common'
 }
 
-/** Quality label */
-export function qualityLabel(quality: string): string {
-  const labels: Record<string, string> = {
-    poor: 'Médiocre', common: 'Commun', uncommon: 'Peu commun',
-    rare: 'Rare', epic: 'Épique', legendary: 'Légendaire', artifact: 'Artefact',
-  }
-  return labels[quality] ?? quality
-}
-
-/** Mock price data generator for demo purposes */
+/** Generate mock price history */
 export function generateMockPriceHistory(basePrice: number, days = 30) {
   const data = []
   let price = basePrice
@@ -91,28 +91,28 @@ export function generateMockPriceHistory(basePrice: number, days = 30) {
   return data
 }
 
-/** Mock market opportunities */
+/** Mock market opportunities (Midnight-relevant) */
 export function generateMockOpportunities() {
   return [
-    { itemId: 191329, itemName: 'Phial of Tepid Versatility', itemQuality: 'rare' as const, type: 'craft' as const, buyPrice: 45000, sellPrice: 72000, profit: 27000, roi: 60, riskLevel: 'low' as const, volume: 340, description: 'Craft below market — herb prices are low' },
-    { itemId: 192852, itemName: 'Alexstraszite: Haste',        itemQuality: 'rare' as const, type: 'craft' as const, buyPrice: 28000, sellPrice: 52000, profit: 24000, roi: 85, riskLevel: 'low' as const, volume: 120, description: 'Gem cutting profit strong this week' },
-    { itemId: 194127, itemName: 'Vibrant Shard',               itemQuality: 'uncommon' as const, type: 'flip' as const, buyPrice: 8000,  sellPrice: 13000, profit: 5000,  roi: 62, riskLevel: 'medium' as const, volume: 620, description: 'Market dip — stock up now' },
-    { itemId: 193059, itemName: 'Vibrant Wildercloth Bolt',    itemQuality: 'common' as const, type: 'craft' as const, buyPrice: 6500,  sellPrice: 9800,  profit: 3300,  roi: 50, riskLevel: 'low' as const, volume: 800, description: 'Bolt conversion profitable today' },
-    { itemId: 191305, itemName: 'Hochenblume',                 itemQuality: 'common' as const, type: 'flip' as const, buyPrice: 450,   sellPrice: 780,   profit: 330,   roi: 73, riskLevel: 'medium' as const, volume: 5000, description: 'Herb prices below 7d average' },
-    { itemId: 194128, itemName: 'Resonant Crystal',            itemQuality: 'rare' as const, type: 'craft' as const, buyPrice: 35000, sellPrice: 48000, profit: 13000, roi: 37, riskLevel: 'low' as const, volume: 200, description: 'Enchant demand stable before raid week' },
+    { itemId: 224249, itemName: 'Sinbloom (Flask crafting)', itemQuality: 'common' as const, type: 'flip' as const, buyPrice: 1200, sellPrice: 2100, profit: 900, roi: 75, riskLevel: 'low' as const, volume: 8000, description: 'Herb en demande pour Alchimie Midnight' },
+    { itemId: 224291, itemName: 'Voidcrystal (Cut)', itemQuality: 'rare' as const, type: 'craft' as const, buyPrice: 32000, sellPrice: 58000, profit: 26000, roi: 81, riskLevel: 'low' as const, volume: 180, description: 'Joaillerie — gem rare très demandée en T1' },
+    { itemId: 224300, itemName: 'Spark of Radiance', itemQuality: 'epic' as const, type: 'flip' as const, buyPrice: 85000, sellPrice: 140000, profit: 55000, roi: 64, riskLevel: 'medium' as const, volume: 45, description: 'Mat obligatoire pour gear ilvl max' },
+    { itemId: 224310, itemName: 'Enchant Helm — Void Clarity', itemQuality: 'uncommon' as const, type: 'craft' as const, buyPrice: 18000, sellPrice: 32000, profit: 14000, roi: 77, riskLevel: 'low' as const, volume: 620, description: 'Nouveau slot casque — forte demande' },
+    { itemId: 224280, itemName: 'Duskweave Bolt (x5)', itemQuality: 'common' as const, type: 'craft' as const, buyPrice: 3200, sellPrice: 5800, profit: 2600, roi: 81, riskLevel: 'low' as const, volume: 2200, description: 'Conversion tissu très profitable' },
+    { itemId: 224302, itemName: 'Mote of Pure Void', itemQuality: 'rare' as const, type: 'flip' as const, buyPrice: 12000, sellPrice: 19500, profit: 7500, roi: 62, riskLevel: 'medium' as const, volume: 320, description: 'Rare node drop, prix stable' },
   ]
 }
 
-/** Realms for selector */
+/** Popular realms */
 export const POPULAR_REALMS = [
-  { slug: 'ravencrest-alliance', name: 'Ravencrest', faction: 'alliance', region: 'eu' },
-  { slug: 'kazzak-horde',        name: 'Kazzak',      faction: 'horde',    region: 'eu' },
-  { slug: 'stormscale-horde',    name: 'Stormscale',  faction: 'horde',    region: 'eu' },
-  { slug: 'twisting-nether-horde', name: 'Twisting Nether', faction: 'horde', region: 'eu' },
-  { slug: 'silvermoon-alliance', name: 'Silvermoon',  faction: 'alliance', region: 'eu' },
-  { slug: 'illidan-horde',       name: 'Illidan',     faction: 'horde',    region: 'us' },
-  { slug: 'area-52-horde',       name: 'Area 52',     faction: 'horde',    region: 'us' },
-  { slug: 'stormrage-alliance',  name: 'Stormrage',   faction: 'alliance', region: 'us' },
-  { slug: 'mal\'ganis-horde',    name: "Mal'Ganis",   faction: 'horde',    region: 'us' },
-  { slug: 'bleeding-hollow-horde', name: 'Bleeding Hollow', faction: 'horde', region: 'us' },
+  { slug: 'ravencrest-alliance', name: 'Ravencrest',       faction: 'alliance', region: 'eu' },
+  { slug: 'kazzak-horde',        name: 'Kazzak',           faction: 'horde',    region: 'eu' },
+  { slug: 'stormscale-horde',    name: 'Stormscale',       faction: 'horde',    region: 'eu' },
+  { slug: 'twisting-nether-horde', name: 'Twisting Nether', faction: 'horde',  region: 'eu' },
+  { slug: 'silvermoon-alliance', name: 'Silvermoon',       faction: 'alliance', region: 'eu' },
+  { slug: 'illidan-horde',       name: 'Illidan',          faction: 'horde',    region: 'us' },
+  { slug: 'area-52-horde',       name: 'Area 52',          faction: 'horde',    region: 'us' },
+  { slug: 'stormrage-alliance',  name: 'Stormrage',        faction: 'alliance', region: 'us' },
+  { slug: 'malganis-horde',      name: "Mal'Ganis",        faction: 'horde',    region: 'us' },
+  { slug: 'bleeding-hollow-horde', name: 'Bleeding Hollow', faction: 'horde',  region: 'us' },
 ]
