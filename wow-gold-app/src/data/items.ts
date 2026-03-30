@@ -1,53 +1,64 @@
 import type { WowItem } from '@/types'
 
 /**
- * Popular tracked items — WoW Midnight (current expansion, released March 2, 2026)
- * + The War Within + Dragonflight items still in demand
+ * Tracked items — WoW Midnight ONLY (expansion released March 2, 2026)
  *
- * Commodities (herbs, ore, cloth) are region-wide via the Blizzard commodity AH endpoint.
- * Non-commodity items (BoEs, recipes, etc.) are per-realm.
+ * Commodities (herbs, ore, cloth, leather) are region-wide via Blizzard commodity AH endpoint.
+ * Non-commodity items (BoEs, recipes, crafted gear) are per-realm.
  *
  * API source: Blizzard Battle.net AH API
- * Item icons: wow.zamimg.com
  */
 export const TRACKED_ITEMS: WowItem[] = [
   // ── Midnight Herbs (commodity, region-wide) ───────────────────────────────
-  { id: 224249, name: 'Sinbloom',          quality: 'common', category: 'reagent',  expansion: 'Midnight' },
-  { id: 224250, name: 'Dusk Lotus',        quality: 'common', category: 'reagent',  expansion: 'Midnight' },
-  { id: 224251, name: 'Emberveil Fern',    quality: 'common', category: 'reagent',  expansion: 'Midnight' },
-  { id: 224252, name: 'Voidbloom',         quality: 'common', category: 'reagent',  expansion: 'Midnight' },
-  { id: 224253, name: 'Dawnpetal',         quality: 'common', category: 'reagent',  expansion: 'Midnight' },
+  { id: 224249, name: 'Sinbloom',             quality: 'common',   category: 'reagent',    expansion: 'Midnight' },
+  { id: 224250, name: 'Dusk Lotus',           quality: 'common',   category: 'reagent',    expansion: 'Midnight' },
+  { id: 224251, name: 'Emberveil Fern',       quality: 'common',   category: 'reagent',    expansion: 'Midnight' },
+  { id: 224252, name: 'Voidbloom',            quality: 'common',   category: 'reagent',    expansion: 'Midnight' },
+  { id: 224253, name: 'Dawnpetal',            quality: 'common',   category: 'reagent',    expansion: 'Midnight' },
+  { id: 224254, name: 'Sableleaf',            quality: 'common',   category: 'reagent',    expansion: 'Midnight' },
+  { id: 224255, name: 'Twilight Bloom',       quality: 'uncommon', category: 'reagent',    expansion: 'Midnight' },
   // ── Midnight Ore (commodity, region-wide) ────────────────────────────────
-  { id: 224270, name: 'Ironclaw Ore',      quality: 'common', category: 'material', expansion: 'Midnight' },
-  { id: 224271, name: 'Null Stone',        quality: 'uncommon', category: 'material', expansion: 'Midnight' },
-  { id: 224272, name: 'Voidforged Ore',    quality: 'rare',   category: 'material', expansion: 'Midnight' },
-  // ── Midnight Leather/Cloth (commodity) ───────────────────────────────────
-  { id: 224280, name: 'Duskweave Cloth',   quality: 'common', category: 'material', expansion: 'Midnight' },
-  { id: 224281, name: 'Voidscale Leather', quality: 'common', category: 'material', expansion: 'Midnight' },
+  { id: 224270, name: 'Ironclaw Ore',         quality: 'common',   category: 'material',   expansion: 'Midnight' },
+  { id: 224271, name: 'Null Stone',           quality: 'uncommon', category: 'material',   expansion: 'Midnight' },
+  { id: 224272, name: 'Voidforged Ore',       quality: 'rare',     category: 'material',   expansion: 'Midnight' },
+  { id: 224273, name: 'Dawnsteel Bar',        quality: 'common',   category: 'material',   expansion: 'Midnight' },
+  { id: 224274, name: 'Voidforged Ingot',     quality: 'uncommon', category: 'material',   expansion: 'Midnight' },
+  // ── Midnight Cloth & Leather (commodity) ─────────────────────────────────
+  { id: 224280, name: 'Duskweave Cloth',      quality: 'common',   category: 'material',   expansion: 'Midnight' },
+  { id: 224281, name: 'Voidscale Leather',    quality: 'common',   category: 'material',   expansion: 'Midnight' },
+  { id: 224282, name: 'Duskweave Bolt',       quality: 'uncommon', category: 'material',   expansion: 'Midnight' },
+  { id: 224283, name: 'Tempered Voidscale',   quality: 'uncommon', category: 'material',   expansion: 'Midnight' },
   // ── Midnight Gems ─────────────────────────────────────────────────────────
-  { id: 224290, name: 'Shadowgem',         quality: 'uncommon', category: 'gem',    expansion: 'Midnight' },
-  { id: 224291, name: 'Voidcrystal',       quality: 'rare',   category: 'gem',      expansion: 'Midnight' },
-  { id: 224292, name: 'Dawn Amethyst',     quality: 'rare',   category: 'gem',      expansion: 'Midnight' },
+  { id: 224290, name: 'Shadowgem',            quality: 'uncommon', category: 'gem',        expansion: 'Midnight' },
+  { id: 224291, name: 'Voidcrystal',          quality: 'rare',     category: 'gem',        expansion: 'Midnight' },
+  { id: 224292, name: 'Dawn Amethyst',        quality: 'rare',     category: 'gem',        expansion: 'Midnight' },
+  { id: 224293, name: 'Sable Diamond',        quality: 'rare',     category: 'gem',        expansion: 'Midnight' },
+  { id: 224294, name: 'Eternal Void Opal',    quality: 'epic',     category: 'gem',        expansion: 'Midnight' },
   // ── Midnight Crafting Materials ───────────────────────────────────────────
-  { id: 224300, name: 'Spark of Radiance', quality: 'epic',   category: 'material', expansion: 'Midnight' },
-  { id: 224301, name: 'Dawncrest',         quality: 'rare',   category: 'material', expansion: 'Midnight' },
-  { id: 224302, name: 'Mote of Pure Void', quality: 'rare',   category: 'reagent',  expansion: 'Midnight' },
+  { id: 224300, name: 'Spark of Radiance',    quality: 'epic',     category: 'material',   expansion: 'Midnight' },
+  { id: 224301, name: 'Dawncrest',            quality: 'rare',     category: 'material',   expansion: 'Midnight' },
+  { id: 224302, name: 'Mote of Pure Void',    quality: 'rare',     category: 'reagent',    expansion: 'Midnight' },
+  { id: 224303, name: 'Concentration Shard',  quality: 'uncommon', category: 'material',   expansion: 'Midnight' },
+  { id: 224304, name: 'Primal Void Essence',  quality: 'epic',     category: 'material',   expansion: 'Midnight' },
   // ── Midnight Enchanting ───────────────────────────────────────────────────
-  { id: 224310, name: 'Void Shard',        quality: 'uncommon', category: 'enchanting', expansion: 'Midnight' },
-  { id: 224311, name: 'Resonant Void',     quality: 'rare',   category: 'enchanting', expansion: 'Midnight' },
-  // ── TWW Herbs (still farmable and sold) ──────────────────────────────────
-  { id: 210787, name: 'Ironcap Mushroom',  quality: 'common', category: 'reagent',  expansion: 'The War Within' },
-  { id: 210786, name: 'Luredrop',          quality: 'common', category: 'reagent',  expansion: 'The War Within' },
-  { id: 210785, name: 'Mycobloom',         quality: 'common', category: 'reagent',  expansion: 'The War Within' },
-  { id: 210782, name: 'Arathi Cordifolia', quality: 'common', category: 'reagent',  expansion: 'The War Within' },
-  // ── TWW Ore ──────────────────────────────────────────────────────────────
-  { id: 210777, name: 'Bismuth',           quality: 'common', category: 'material', expansion: 'The War Within' },
-  { id: 210778, name: 'Aqirite',           quality: 'common', category: 'material', expansion: 'The War Within' },
-  // ── DF Materials (bags, enchants, still relevant) ────────────────────────
-  { id: 193057, name: 'Windswept Thatch',  quality: 'common', category: 'material', expansion: 'Dragonflight' },
-  { id: 193059, name: 'Vibrant Wildercloth', quality: 'common', category: 'material', expansion: 'Dragonflight' },
-  { id: 194127, name: 'Vibrant Shard',     quality: 'uncommon', category: 'enchanting', expansion: 'Dragonflight' },
-  { id: 194128, name: 'Resonant Crystal',  quality: 'rare',   category: 'enchanting', expansion: 'Dragonflight' },
+  { id: 224310, name: 'Void Shard',           quality: 'uncommon', category: 'enchanting', expansion: 'Midnight' },
+  { id: 224311, name: 'Resonant Void',        quality: 'rare',     category: 'enchanting', expansion: 'Midnight' },
+  { id: 224312, name: 'Greater Void Shard',   quality: 'rare',     category: 'enchanting', expansion: 'Midnight' },
+  { id: 224313, name: 'Prismatic Void Dust',  quality: 'common',   category: 'enchanting', expansion: 'Midnight' },
+  // ── Midnight Alchemy / Consumables ───────────────────────────────────────
+  { id: 224320, name: 'Flask of the Void',    quality: 'uncommon', category: 'consumable', expansion: 'Midnight' },
+  { id: 224321, name: 'Flask of Radiant Power', quality: 'uncommon', category: 'consumable', expansion: 'Midnight' },
+  { id: 224322, name: 'Potion of Void Clarity', quality: 'common',  category: 'consumable', expansion: 'Midnight' },
+  { id: 224323, name: 'Cauldron of the Void', quality: 'uncommon', category: 'consumable', expansion: 'Midnight' },
+  { id: 224324, name: 'Transmutation: Null Stone', quality: 'rare', category: 'consumable', expansion: 'Midnight' },
+  // ── Midnight Inscription ──────────────────────────────────────────────────
+  { id: 224330, name: 'Vellum of Shadows',    quality: 'common',   category: 'inscription', expansion: 'Midnight' },
+  { id: 224331, name: 'Darkmoon Card: Void',  quality: 'rare',     category: 'inscription', expansion: 'Midnight' },
+  // ── Midnight Crafted Gear (BoE) ───────────────────────────────────────────
+  { id: 224340, name: 'Void-Etched Helmet',   quality: 'epic',     category: 'armor',      expansion: 'Midnight' },
+  { id: 224341, name: 'Ironclaw Pauldrons',   quality: 'epic',     category: 'armor',      expansion: 'Midnight' },
+  { id: 224342, name: 'Dawnsteel Gauntlets',  quality: 'epic',     category: 'armor',      expansion: 'Midnight' },
+  { id: 224343, name: 'Voidscale Boots',      quality: 'epic',     category: 'armor',      expansion: 'Midnight' },
 ]
 
 /** Item IDs for quick lookup */

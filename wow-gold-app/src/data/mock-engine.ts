@@ -37,36 +37,50 @@ export function generateMockItemData(): ItemData[] {
     224251: 800,    // Emberveil Fern
     224252: 5200,   // Voidbloom
     224253: 1800,   // Dawnpetal
+    224254: 900,    // Sableleaf
+    224255: 6500,   // Twilight Bloom
     // Midnight Ore
     224270: 600,    // Ironclaw Ore
     224271: 4800,   // Null Stone
     224272: 12000,  // Voidforged Ore
+    224273: 1800,   // Dawnsteel Bar
+    224274: 8500,   // Voidforged Ingot
     // Midnight Cloth/Leather
     224280: 400,    // Duskweave Cloth
     224281: 700,    // Voidscale Leather
+    224282: 3200,   // Duskweave Bolt
+    224283: 5800,   // Tempered Voidscale
     // Midnight Gems
     224290: 8000,   // Shadowgem
     224291: 32000,  // Voidcrystal
     224292: 25000,  // Dawn Amethyst
+    224293: 22000,  // Sable Diamond
+    224294: 75000,  // Eternal Void Opal
     // Midnight Crafting
     224300: 85000,  // Spark of Radiance
     224301: 15000,  // Dawncrest
     224302: 12000,  // Mote of Pure Void
+    224303: 4500,   // Concentration Shard
+    224304: 120000, // Primal Void Essence
     // Midnight Enchanting
     224310: 3500,   // Void Shard
     224311: 18000,  // Resonant Void
-    // TWW
-    210787: 500,
-    210786: 450,
-    210785: 380,
-    210782: 600,
-    210777: 300,
-    210778: 2800,
-    // DF
-    193057: 200,
-    193059: 350,
-    194127: 4500,
-    194128: 12000,
+    224312: 28000,  // Greater Void Shard
+    224313: 800,    // Prismatic Void Dust
+    // Midnight Alchemy
+    224320: 22000,  // Flask of the Void
+    224321: 20000,  // Flask of Radiant Power
+    224322: 4500,   // Potion of Void Clarity
+    224323: 85000,  // Cauldron of the Void
+    224324: 45000,  // Transmutation: Null Stone
+    // Midnight Inscription
+    224330: 600,    // Vellum of Shadows
+    224331: 95000,  // Darkmoon Card: Void
+    // Midnight Crafted Gear (BoE)
+    224340: 320000, // Void-Etched Helmet
+    224341: 280000, // Ironclaw Pauldrons
+    224342: 260000, // Dawnsteel Gauntlets
+    224343: 240000, // Voidscale Boots
   }
 
   return TRACKED_ITEMS.map(item => {
