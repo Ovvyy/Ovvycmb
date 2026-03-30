@@ -1,0 +1,25 @@
+services:
+  goldmaster:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: goldmaster
+    restart: unless-stopped
+    # Écoute uniquement sur localhost — le vrai SSL/auth est géré par Nginx hôte
+    ports:
+      - "127.0.0.1:3001:80"
+    environment:
+      - TZ=Europe/Paris
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "com.goldmaster.description=WoW Gold Farming App"
+      - "com.goldmaster.version=1.0.0"
+
+networks:
+  default:
+    name: goldmaster-network
