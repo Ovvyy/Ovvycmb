@@ -1,52 +1,100 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────
+   CSS Custom Properties — WoW Midnight
+   ──────────────────────────────────────────────── */
 :root {
-  --gold: #f0b429;
-  --gold-light: #ffd700;
-  --gold-dark: #c8960c;
-  --bg: #0d0d0f;
-  --surface: #151518;
-  --card: #1a1a1f;
-  --border: #2a2a32;
+  --gold:         #E8B86D;
+  --gold-light:   #FFD880;
+  --gold-dark:    #B8862A;
+  --gold-glow:    rgba(232,184,109,0.18);
+  --arcane:       #7C3AED;
+  --arcane-glow:  rgba(124,58,237,0.22);
+  --bg:           #07090E;
+  --surface:      #0D1117;
+  --card:         #0F1623;
+  --border:       #1C2333;
+  --text:         #CBD5E1;
+  --text-muted:   #64748B;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; padding: 0; }
 
 body {
   background-color: var(--bg);
-  color: #e2e8f0;
+  background-image:
+    radial-gradient(ellipse 100% 50% at 50% -5%,  rgba(124,58,237,0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 60%  40% at 95% 100%, rgba(232,184,109,0.025) 0%, transparent 60%),
+    radial-gradient(ellipse 40%  30% at 5%  80%,  rgba(232,184,109,0.02) 0%, transparent 60%);
+  background-attachment: fixed;
+  color: var(--text);
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* Scrollbar */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #1C2333; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-dark); }
+
+/* ─────────────────────────────────────────────────
+   Keyframes
+   ──────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
-::-webkit-scrollbar-track {
-  background: var(--surface);
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 6px var(--gold-glow); }
+  50%       { box-shadow: 0 0 22px rgba(232,184,109,0.38); }
 }
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 3px;
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gold-dark);
+@keyframes entrance {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
 }
 
-/* Gold shimmer text */
+/* ─────────────────────────────────────────────────
+   Animation Utilities
+   ──────────────────────────────────────────────── */
+.animate-pulse-gold { animation: pulse-gold 2.5s ease-in-out infinite; }
+.animate-float      { animation: float 4s ease-in-out infinite; }
+.animate-glow       { animation: glow-pulse 2s ease-in-out infinite; }
+.animate-page-enter { animation: page-enter 0.3s ease forwards; }
+
+/* Stagger children entrance */
+.stagger > * { opacity: 0; animation: entrance 0.3s ease forwards; }
+.stagger > *:nth-child(1)  { animation-delay: 0.04s; }
+.stagger > *:nth-child(2)  { animation-delay: 0.08s; }
+.stagger > *:nth-child(3)  { animation-delay: 0.12s; }
+.stagger > *:nth-child(4)  { animation-delay: 0.16s; }
+.stagger > *:nth-child(5)  { animation-delay: 0.20s; }
+.stagger > *:nth-child(6)  { animation-delay: 0.24s; }
+.stagger > *:nth-child(7)  { animation-delay: 0.28s; }
+.stagger > *:nth-child(8)  { animation-delay: 0.32s; }
+.stagger > *:nth-child(9)  { animation-delay: 0.36s; }
+.stagger > *:nth-child(10) { animation-delay: 0.40s; }
+
+/* ─────────────────────────────────────────────────
+   Typography
+   ──────────────────────────────────────────────── */
 .text-shimmer {
-  background: linear-gradient(90deg, #c8960c 0%, #ffd700 30%, #f0b429 60%, #c8960c 100%);
+  background: linear-gradient(90deg, var(--gold-dark) 0%, var(--gold-light) 30%, var(--gold) 60%, var(--gold-dark) 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -54,83 +102,91 @@ body {
   animation: shimmer 3s linear infinite;
 }
 
-@keyframes shimmer {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
+/* ─────────────────────────────────────────────────
+   Sidebar
+   ──────────────────────────────────────────────── */
+.sidebar-glass {
+  background: rgba(7,9,14,0.97);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
-/* WoW quality colors */
-.quality-poor     { color: #9d9d9d; }
-.quality-common   { color: #ffffff; }
-.quality-uncommon { color: #1eff00; }
-.quality-rare     { color: #0070dd; }
-.quality-epic     { color: #a335ee; }
-.quality-legendary{ color: #ff8000; }
-.quality-artifact { color: #e6cc80; }
-
-/* Hover glow */
-.hover-glow:hover {
-  box-shadow: 0 0 16px rgba(240, 180, 41, 0.25);
-  transition: box-shadow 0.2s ease;
+/* ─────────────────────────────────────────────────
+   Nav Items
+   ──────────────────────────────────────────────── */
+.nav-item {
+  position: relative;
+  border-left: 2px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  color: #64748B;
+  padding-left: 10px;
+}
+.nav-item:hover {
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(232,184,109,0.3);
+  color: #CBD5E1;
+}
+.nav-item-active {
+  background: linear-gradient(90deg, rgba(232,184,109,0.1), rgba(232,184,109,0.03));
+  border-left: 2px solid var(--gold) !important;
+  color: var(--gold) !important;
 }
 
-/* Card gold border */
-.card-gold-border {
-  border: 1px solid rgba(240, 180, 41, 0.2);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+/* ─────────────────────────────────────────────────
+   Rune Separator
+   ──────────────────────────────────────────────── */
+.rune-sep {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.card-gold-border:hover {
-  border-color: rgba(240, 180, 41, 0.45);
-  box-shadow: 0 0 12px rgba(240, 180, 41, 0.1);
-}
-
-/* Profit/loss badges */
-.badge-profit  { background: rgba(0,230,118,0.12); color: #00e676; border: 1px solid rgba(0,230,118,0.3); }
-.badge-loss    { background: rgba(255,71,87,0.12);  color: #ff4757; border: 1px solid rgba(255,71,87,0.3);  }
-.badge-neutral { background: rgba(240,180,41,0.12); color: #f0b429; border: 1px solid rgba(240,180,41,0.3); }
-
-/* Skeleton loading */
-.skeleton {
-  background: linear-gradient(90deg, #1a1a1f 25%, #22222a 50%, #1a1a1f 75%);
-  background-size: 200% 100%;
-  animation: skeleton-loading 1.5s infinite;
-  border-radius: 4px;
-}
-@keyframes skeleton-loading {
-  0%   { background-position: 200% center; }
-  100% { background-position: -200% center; }
+.rune-sep::before, .rune-sep::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,184,109,0.15), transparent);
 }
 
-/* Pulse gold animation */
-@keyframes pulse-gold {
-  0%, 100% { box-shadow: 0 0 8px rgba(240,180,41,0.2); }
-  50%       { box-shadow: 0 0 20px rgba(240,180,41,0.5); }
-}
-.animate-pulse-gold { animation: pulse-gold 2s ease-in-out infinite; }
+/* ─────────────────────────────────────────────────
+   WoW Quality Colors
+   ──────────────────────────────────────────────── */
+.quality-poor      { color: #9d9d9d; }
+.quality-common    { color: #ffffff; }
+.quality-uncommon  { color: #1eff00; }
+.quality-rare      { color: #0070dd; }
+.quality-epic      { color: #a335ee; }
+.quality-legendary { color: #ff8000; }
+.quality-artifact  { color: #e6cc80; }
 
-/* Float animation */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-5px); }
-}
-.animate-float { animation: float 3s ease-in-out infinite; }
-
-/* Table styles */
+/* ─────────────────────────────────────────────────
+   Table
+   ──────────────────────────────────────────────── */
 .wow-table { width: 100%; border-collapse: collapse; }
 .wow-table th {
-  background: rgba(240,180,41,0.08);
-  color: #f0b429;
-  font-size: 11px;
+  background: rgba(232,184,109,0.05);
+  color: var(--gold);
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 10px 16px;
+  letter-spacing: 0.1em;
+  padding: 10px 14px;
   text-align: left;
-  border-bottom: 1px solid rgba(240,180,41,0.15);
+  border-bottom: 1px solid rgba(232,184,109,0.1);
+  font-family: 'Cinzel', serif;
 }
 .wow-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(42,42,50,0.8);
-  font-size: 14px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(28,35,51,0.7);
+  font-size: 13px;
 }
-.wow-table tr:hover td { background: rgba(240,180,41,0.03); }
+.wow-table tr:hover td { background: rgba(232,184,109,0.02); }
 .wow-table tr:last-child td { border-bottom: none; }
+
+/* ─────────────────────────────────────────────────
+   Skeleton
+   ──────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, #0F1623 25%, #192133 50%, #0F1623 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease infinite;
+  border-radius: 6px;
+}
