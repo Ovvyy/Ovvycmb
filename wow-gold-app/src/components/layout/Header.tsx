@@ -5,17 +5,21 @@ interface HeaderProps {
   title: string
   subtitle?: string
   actions?: React.ReactNode
+  icon?: string
 }
 
-export function Header({ title, subtitle, actions }: HeaderProps) {
+export function Header({ title, subtitle, actions, icon }: HeaderProps) {
   const { settings } = useSettingsStore()
   const [lastUpdated] = useState(new Date())
 
   return (
     <div className="flex items-start justify-between mb-6">
-      <div>
-        <h2 className="text-2xl font-wow font-bold text-white">{title}</h2>
-        {subtitle && <p className="text-sm text-slate-500 mt-0.5">{subtitle}</p>}
+      <div className="flex items-center gap-3">
+        {icon && <span className="text-3xl">{icon}</span>}
+        <div>
+          <h2 className="text-2xl font-wow font-bold text-white">{title}</h2>
+          {subtitle && <p className="text-sm text-slate-500 mt-0.5">{subtitle}</p>}
+        </div>
       </div>
       <div className="flex items-center gap-3">
         {actions}

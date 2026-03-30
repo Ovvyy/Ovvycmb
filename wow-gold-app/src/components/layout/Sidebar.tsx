@@ -21,11 +21,26 @@ const NAV_SECTIONS = [
     ],
   },
   {
+    title: 'Calculateurs',
+    items: [
+      { to: '/prospecting',   icon: '⛏️', label: 'Prospection' },
+      { to: '/enchanting',    icon: '✨', label: 'Enchanting Shuffle' },
+    ],
+  },
+  {
+    title: 'Professions',
+    items: [
+      { to: '/knowledge',     icon: '📚', label: 'KP & Moxie' },
+      { to: '/equipment',     icon: '🛡️', label: 'Équipement BiS' },
+      { to: '/treasures',     icon: '🗺️', label: 'Carte aux Trésors' },
+      { to: '/professions',   icon: '🎓', label: 'Guides Professions' },
+    ],
+  },
+  {
     title: 'Outils',
     items: [
       { to: '/watchlist',     icon: '👁️', label: 'Watchlist & Alertes' },
       { to: '/strategies',    icon: '📋', label: 'Stratégies' },
-      { to: '/professions',   icon: '📚', label: 'Professions' },
     ],
   },
   {
@@ -43,7 +58,7 @@ export function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-full w-60 bg-wow-surface border-r border-wow-border flex flex-col z-40">
       {/* Logo */}
-      <div className="px-5 py-5 border-b border-wow-border">
+      <div className="px-5 py-4 border-b border-wow-border">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-wow-goldDark to-wow-gold flex items-center justify-center text-wow-bg font-bold text-lg shadow-gold-sm">
             G
@@ -56,7 +71,7 @@ export function Sidebar() {
       </div>
 
       {/* Realm info */}
-      <div className="px-4 py-3 border-b border-wow-border/50">
+      <div className="px-4 py-2.5 border-b border-wow-border/50">
         <div className="flex items-center gap-2 text-xs">
           <span className={cn(
             'w-2 h-2 rounded-full',
@@ -69,10 +84,10 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-1">
+      <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5">
         {NAV_SECTIONS.map(section => (
           <div key={section.title}>
-            <p className="px-2 pt-3 pb-1.5 text-[10px] uppercase font-semibold tracking-wider text-slate-600">
+            <p className="px-2 pt-2.5 pb-1 text-[10px] uppercase font-semibold tracking-wider text-slate-600">
               {section.title}
             </p>
             {section.items.map(item => (
@@ -108,7 +123,7 @@ export function Sidebar() {
           Données: Blizzard AH API (Midnight)
         </p>
         <p className="text-[10px] text-slate-700 text-center">
-          WoW Midnight — Quel'Thalas 🌑
+          WoW Midnight v12.0.1 — Quel'Thalas 🌑
         </p>
       </div>
     </aside>

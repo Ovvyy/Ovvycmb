@@ -1,72 +1,77 @@
 import type { WowItem } from '@/types'
 
 /**
- * Tracked items — WoW Midnight ONLY (expansion released March 2, 2026)
+ * WoW Midnight v12.0.1 — Items confirmés depuis la sheet officielle
  *
- * Commodities (herbs, ore, cloth, leather) are region-wide via Blizzard commodity AH endpoint.
- * Non-commodity items (BoEs, recipes, crafted gear) are per-realm.
+ * IMPORTANT: Les itemId marqués 0 sont des placeholders.
+ * Pour obtenir les vrais IDs, connectez l'API Blizzard dans Paramètres.
+ * Zones Midnight: Eversong, Harandar, Silvermoon, Voidstorm, Zul'Aman
  *
- * API source: Blizzard Battle.net AH API
+ * Sources: Sheet communautaire WoW Midnight + Blizzard Battle.net AH API
  */
+
+// ── Helper pour marquer les IDs à vérifier ───────────────────────────────────
+// Les IDs > 0 sont des IDs Blizzard réels (vérifiés).
+// Les IDs = 0 sont des placeholders en attente de l'API Blizzard.
+
 export const TRACKED_ITEMS: WowItem[] = [
-  // ── Midnight Herbs (commodity, region-wide) ───────────────────────────────
-  { id: 224249, name: 'Sinbloom',             quality: 'common',   category: 'reagent',    expansion: 'Midnight' },
-  { id: 224250, name: 'Dusk Lotus',           quality: 'common',   category: 'reagent',    expansion: 'Midnight' },
-  { id: 224251, name: 'Emberveil Fern',       quality: 'common',   category: 'reagent',    expansion: 'Midnight' },
-  { id: 224252, name: 'Voidbloom',            quality: 'common',   category: 'reagent',    expansion: 'Midnight' },
-  { id: 224253, name: 'Dawnpetal',            quality: 'common',   category: 'reagent',    expansion: 'Midnight' },
-  { id: 224254, name: 'Sableleaf',            quality: 'common',   category: 'reagent',    expansion: 'Midnight' },
-  { id: 224255, name: 'Twilight Bloom',       quality: 'uncommon', category: 'reagent',    expansion: 'Midnight' },
-  // ── Midnight Ore (commodity, region-wide) ────────────────────────────────
-  { id: 224270, name: 'Ironclaw Ore',         quality: 'common',   category: 'material',   expansion: 'Midnight' },
-  { id: 224271, name: 'Null Stone',           quality: 'uncommon', category: 'material',   expansion: 'Midnight' },
-  { id: 224272, name: 'Voidforged Ore',       quality: 'rare',     category: 'material',   expansion: 'Midnight' },
-  { id: 224273, name: 'Dawnsteel Bar',        quality: 'common',   category: 'material',   expansion: 'Midnight' },
-  { id: 224274, name: 'Voidforged Ingot',     quality: 'uncommon', category: 'material',   expansion: 'Midnight' },
-  // ── Midnight Cloth & Leather (commodity) ─────────────────────────────────
-  { id: 224280, name: 'Duskweave Cloth',      quality: 'common',   category: 'material',   expansion: 'Midnight' },
-  { id: 224281, name: 'Voidscale Leather',    quality: 'common',   category: 'material',   expansion: 'Midnight' },
-  { id: 224282, name: 'Duskweave Bolt',       quality: 'uncommon', category: 'material',   expansion: 'Midnight' },
-  { id: 224283, name: 'Tempered Voidscale',   quality: 'uncommon', category: 'material',   expansion: 'Midnight' },
-  // ── Midnight Gems ─────────────────────────────────────────────────────────
-  { id: 224290, name: 'Shadowgem',            quality: 'uncommon', category: 'gem',        expansion: 'Midnight' },
-  { id: 224291, name: 'Voidcrystal',          quality: 'rare',     category: 'gem',        expansion: 'Midnight' },
-  { id: 224292, name: 'Dawn Amethyst',        quality: 'rare',     category: 'gem',        expansion: 'Midnight' },
-  { id: 224293, name: 'Sable Diamond',        quality: 'rare',     category: 'gem',        expansion: 'Midnight' },
-  { id: 224294, name: 'Eternal Void Opal',    quality: 'epic',     category: 'gem',        expansion: 'Midnight' },
-  // ── Midnight Crafting Materials ───────────────────────────────────────────
-  { id: 224300, name: 'Spark of Radiance',    quality: 'epic',     category: 'material',   expansion: 'Midnight' },
-  { id: 224301, name: 'Dawncrest',            quality: 'rare',     category: 'material',   expansion: 'Midnight' },
-  { id: 224302, name: 'Mote of Pure Void',    quality: 'rare',     category: 'reagent',    expansion: 'Midnight' },
-  { id: 224303, name: 'Concentration Shard',  quality: 'uncommon', category: 'material',   expansion: 'Midnight' },
-  { id: 224304, name: 'Primal Void Essence',  quality: 'epic',     category: 'material',   expansion: 'Midnight' },
-  // ── Midnight Enchanting ───────────────────────────────────────────────────
-  { id: 224310, name: 'Void Shard',           quality: 'uncommon', category: 'enchanting', expansion: 'Midnight' },
-  { id: 224311, name: 'Resonant Void',        quality: 'rare',     category: 'enchanting', expansion: 'Midnight' },
-  { id: 224312, name: 'Greater Void Shard',   quality: 'rare',     category: 'enchanting', expansion: 'Midnight' },
-  { id: 224313, name: 'Prismatic Void Dust',  quality: 'common',   category: 'enchanting', expansion: 'Midnight' },
-  // ── Midnight Alchemy / Consumables ───────────────────────────────────────
-  { id: 224320, name: 'Flask of the Void',    quality: 'uncommon', category: 'consumable', expansion: 'Midnight' },
-  { id: 224321, name: 'Flask of Radiant Power', quality: 'uncommon', category: 'consumable', expansion: 'Midnight' },
-  { id: 224322, name: 'Potion of Void Clarity', quality: 'common',  category: 'consumable', expansion: 'Midnight' },
-  { id: 224323, name: 'Cauldron of the Void', quality: 'uncommon', category: 'consumable', expansion: 'Midnight' },
-  { id: 224324, name: 'Transmutation: Null Stone', quality: 'rare', category: 'consumable', expansion: 'Midnight' },
-  // ── Midnight Inscription ──────────────────────────────────────────────────
-  { id: 224330, name: 'Vellum of Shadows',    quality: 'common',   category: 'inscription', expansion: 'Midnight' },
-  { id: 224331, name: 'Darkmoon Card: Void',  quality: 'rare',     category: 'inscription', expansion: 'Midnight' },
-  // ── Midnight Crafted Gear (BoE) ───────────────────────────────────────────
-  { id: 224340, name: 'Void-Etched Helmet',   quality: 'epic',     category: 'armor',      expansion: 'Midnight' },
-  { id: 224341, name: 'Ironclaw Pauldrons',   quality: 'epic',     category: 'armor',      expansion: 'Midnight' },
-  { id: 224342, name: 'Dawnsteel Gauntlets',  quality: 'epic',     category: 'armor',      expansion: 'Midnight' },
-  { id: 224343, name: 'Voidscale Boots',      quality: 'epic',     category: 'armor',      expansion: 'Midnight' },
+  // ── Minerais Midnight (source: données de prospection) ───────────────────
+  { id: 0, name: 'Umbral Tin Ore',       quality: 'common',   category: 'material',   expansion: 'Midnight' },
+  { id: 0, name: 'Brilliant Silver Ore', quality: 'uncommon', category: 'material',   expansion: 'Midnight' },
+
+  // ── Gems Midnight — Depuis Umbral Tin (prospection confirmée) ────────────
+  { id: 0, name: 'Harandar Peridot',     quality: 'uncommon', category: 'gem',        expansion: 'Midnight' },
+  { id: 0, name: 'Flawless Peridot',     quality: 'rare',     category: 'gem',        expansion: 'Midnight' },
+  { id: 0, name: 'Tenebrous Amethyst',   quality: 'uncommon', category: 'gem',        expansion: 'Midnight' },
+  { id: 0, name: 'Flawless Amethyst',    quality: 'rare',     category: 'gem',        expansion: 'Midnight' },
+
+  // ── Gems Midnight — Depuis Brilliant Silver (prospection confirmée) ───────
+  { id: 0, name: 'Sanguine Garnet',      quality: 'uncommon', category: 'gem',        expansion: 'Midnight' },
+  { id: 0, name: 'Flawless Garnet',      quality: 'rare',     category: 'gem',        expansion: 'Midnight' },
+  { id: 0, name: 'Amani Lapis',          quality: 'uncommon', category: 'gem',        expansion: 'Midnight' },
+  { id: 0, name: 'Flawless Lapis',       quality: 'rare',     category: 'gem',        expansion: 'Midnight' },
+
+  // ── Gems Midnight — Rares (toutes mines) ─────────────────────────────────
+  { id: 0, name: 'Eversong Diamond',     quality: 'epic',     category: 'gem',        expansion: 'Midnight' },
+  { id: 0, name: 'Crystalline Glass',    quality: 'uncommon', category: 'gem',        expansion: 'Midnight' },
+  { id: 0, name: 'Duskshrouded Stone',   quality: 'common',   category: 'material',   expansion: 'Midnight' },
+
+  // ── Enchantement Midnight (source: données shuffle disenchant) ────────────
+  { id: 0, name: 'Radiant Shard',        quality: 'uncommon', category: 'enchanting', expansion: 'Midnight' },
+  { id: 0, name: 'Evercore',             quality: 'common',   category: 'material',   expansion: 'Midnight' },
+
+  // ── Outils de Profession BiS (craftables et vendables sur AH) ────────────
+  // Enchantement (crafté par Enchantement — vendeur Lyrendal 150 Artisan Moxie)
+  { id: 0, name: 'Runed Dazzling Thorium Rod',            quality: 'rare', category: 'other', expansion: 'Midnight' },
+  // Couture (crafté Couture — Lyrendal 150 Artisan Moxie)
+  { id: 0, name: "Self-Sharpening Sin'dorei Snippers",    quality: 'rare', category: 'other', expansion: 'Midnight' },
+  // Alchimie (crafté — Lyrendal 150 Artisan Moxie)
+  { id: 0, name: "Super Sin'dorei Alchemist's Mixing Rod",quality: 'rare', category: 'other', expansion: 'Midnight' },
+  // Calligraphie (crafté — Lyrendal 150 Artisan Moxie)
+  { id: 0, name: "Super Sin'dorei Quill",                 quality: 'rare', category: 'other', expansion: 'Midnight' },
+  // Joaillerie (crafté — Giga-Gem Grippers)
+  { id: 0, name: 'Giga-Gem Grippers',                    quality: 'rare', category: 'other', expansion: 'Midnight' },
+  // Forge (crafté Forge — Sunforged)
+  { id: 0, name: "Sunforged Blacksmith's Hammer",         quality: 'rare', category: 'other', expansion: 'Midnight' },
+  // Travail du cuir (crafté LW)
+  { id: 0, name: "Sunforged Leatherworker's Knife",       quality: 'rare', category: 'other', expansion: 'Midnight' },
+  // Ingénierie (crafté)
+  { id: 0, name: "Turbo-Junker's Multitool v9",           quality: 'rare', category: 'other', expansion: 'Midnight' },
+  // Minage
+  { id: 0, name: 'Sunforged Pickaxe',                     quality: 'rare', category: 'other', expansion: 'Midnight' },
+  // Dépeçage
+  { id: 0, name: 'Sunforged Skinning Knife',              quality: 'rare', category: 'other', expansion: 'Midnight' },
+  // Herborisme
+  { id: 0, name: 'Sunforged Sickle',                      quality: 'rare', category: 'other', expansion: 'Midnight' },
 ]
 
 /** Item IDs for quick lookup */
 export const ITEM_ID_MAP = new Map(TRACKED_ITEMS.map((i) => [i.id, i]))
 
-/** Wowhead item URL */
+/** Wowhead item URL (midnight items — ID=0 signifie placeholder) */
 export function wowheadUrl(itemId: number): string {
-  return `https://www.wowhead.com/item=${itemId}`
+  if (itemId === 0) return 'https://www.wowhead.com/midnight/items'
+  return `https://www.wowhead.com/midnight/item=${itemId}`
 }
 
 /** Wowhead icon URL */
@@ -102,15 +107,15 @@ export function generateMockPriceHistory(basePrice: number, days = 30) {
   return data
 }
 
-/** Mock market opportunities (Midnight-relevant) */
+/** Mock market opportunities (Midnight, items confirmés seulement) */
 export function generateMockOpportunities() {
   return [
-    { itemId: 224249, itemName: 'Sinbloom (Flask crafting)', itemQuality: 'common' as const, type: 'flip' as const, buyPrice: 1200, sellPrice: 2100, profit: 900, roi: 75, riskLevel: 'low' as const, volume: 8000, description: 'Herb en demande pour Alchimie Midnight' },
-    { itemId: 224291, itemName: 'Voidcrystal (Cut)', itemQuality: 'rare' as const, type: 'craft' as const, buyPrice: 32000, sellPrice: 58000, profit: 26000, roi: 81, riskLevel: 'low' as const, volume: 180, description: 'Joaillerie — gem rare très demandée en T1' },
-    { itemId: 224300, itemName: 'Spark of Radiance', itemQuality: 'epic' as const, type: 'flip' as const, buyPrice: 85000, sellPrice: 140000, profit: 55000, roi: 64, riskLevel: 'medium' as const, volume: 45, description: 'Mat obligatoire pour gear ilvl max' },
-    { itemId: 224310, itemName: 'Enchant Helm — Void Clarity', itemQuality: 'uncommon' as const, type: 'craft' as const, buyPrice: 18000, sellPrice: 32000, profit: 14000, roi: 77, riskLevel: 'low' as const, volume: 620, description: 'Nouveau slot casque — forte demande' },
-    { itemId: 224280, itemName: 'Duskweave Bolt (x5)', itemQuality: 'common' as const, type: 'craft' as const, buyPrice: 3200, sellPrice: 5800, profit: 2600, roi: 81, riskLevel: 'low' as const, volume: 2200, description: 'Conversion tissu très profitable' },
-    { itemId: 224302, itemName: 'Mote of Pure Void', itemQuality: 'rare' as const, type: 'flip' as const, buyPrice: 12000, sellPrice: 19500, profit: 7500, roi: 62, riskLevel: 'medium' as const, volume: 320, description: 'Rare node drop, prix stable' },
+    { itemId: 0, itemName: 'Prospection Umbral Tin → Flawless Amethyst', itemQuality: 'rare' as const, type: 'flip' as const, buyPrice: 2750000, sellPrice: 25980000, profit: 23230000, roi: 845, riskLevel: 'medium' as const, volume: 200, description: 'Prospection Umbral Tin Ore → Flawless Amethyst (taux: 2.34%)' },
+    { itemId: 0, itemName: 'Eversong Diamond (prospection)', itemQuality: 'epic' as const, type: 'flip' as const, buyPrice: 2580000, sellPrice: 17490000, profit: 14910000, roi: 578, riskLevel: 'low' as const, volume: 50, description: 'Rare drop de prospection Brilliant Silver Ore (taux: 1.12%)' },
+    { itemId: 0, itemName: 'Shuffle Enchantement (Evercore → Radiant Shard)', itemQuality: 'uncommon' as const, type: 'craft' as const, buyPrice: 58900, sellPrice: 136264, profit: 77364, roi: 131, riskLevel: 'low' as const, volume: 5000, description: 'Shuffle: craft Evercore (58900c) → DE → Radiant Shard (82600c avg)' },
+    { itemId: 0, itemName: 'Flawless Garnet (coup)', itemQuality: 'rare' as const, type: 'flip' as const, buyPrice: 2580000, sellPrice: 18500000, profit: 15920000, roi: 617, riskLevel: 'medium' as const, volume: 100, description: 'Prospection Brilliant Silver Ore → Flawless Garnet (taux: 2.47%)' },
+    { itemId: 0, itemName: "Sunforged Blacksmith's Hammer (BiS outil)", itemQuality: 'rare' as const, type: 'craft' as const, buyPrice: 5000000, sellPrice: 15000000, profit: 10000000, roi: 200, riskLevel: 'low' as const, volume: 80, description: 'Outil BiS Forge Midnight — forte demande des joueurs qui montent leur métier' },
+    { itemId: 0, itemName: 'Runed Dazzling Thorium Rod (outil enchanteur)', itemQuality: 'rare' as const, type: 'craft' as const, buyPrice: 3000000, sellPrice: 12000000, profit: 9000000, roi: 300, riskLevel: 'low' as const, volume: 60, description: 'Outil BiS Enchantement — 150 Artisan Moxie vendor' },
   ]
 }
 
