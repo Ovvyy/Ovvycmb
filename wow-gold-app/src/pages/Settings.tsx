@@ -197,15 +197,19 @@ export function Settings() {
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div>
                 <p className="text-slate-500">Version</p>
-                <p className="text-white font-mono">1.0.0</p>
+                <p className="text-white font-mono">2.0.0 — Bloomberg</p>
               </div>
               <div>
                 <p className="text-slate-500">Extension cible</p>
-                <p className="text-white">The War Within / Midnight</p>
+                <p className="text-white">Midnight (mars 2026)</p>
               </div>
               <div>
                 <p className="text-slate-500">Source de données</p>
                 <p className="text-white">Blizzard Battle.net AH API</p>
+              </div>
+              <div>
+                <p className="text-slate-500">Moteur IA</p>
+                <p className="text-white">Heuristique + Patterns</p>
               </div>
               <div>
                 <p className="text-slate-500">Mode</p>
