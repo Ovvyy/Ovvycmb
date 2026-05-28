@@ -1,61 +1,24 @@
-import { Window } from "@tauri-apps/api/window";
-import { Minus, Square, X, Layers } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useAppStore } from '@/stores/appStore'
 
 export function TitleBar() {
-  const appWindow = Window.getCurrent();
+  const { isConnected } = useAppStore()
 
   return (
-    <div className="flex items-center h-10 px-4 drag-region border-b border-border/50 bg-card/80 backdrop-blur-sm flex-shrink-0">
-      {/* Logo */}
-      <div className="flex items-center gap-2 no-drag">
-        <div className="w-6 h-6 rounded-md bg-primary/20 flex items-center justify-center">
-          <Layers className="w-3.5 h-3.5 text-primary" />
+    <div
+      className="flex items-center justify-between px-4 bg-surface-950 border-b border-white/5"
+      style={{ height: 40, WebkitAppRegion: 'drag' } as React.CSSProperties}
+    >
+      <div className="flex items-center gap-3" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded bg-brand-500 flex items-center justify-center text-xs font-bold">O</div>
+          <span className="text-sm font-semibold tracking-wider text-white/90">OVVYCMB</span>
         </div>
-        <span className="text-sm font-semibold text-foreground/90 tracking-tight">
-          Ovvycmb
-        </span>
-        <span className="text-xs text-muted-foreground font-medium px-1.5 py-0.5 bg-muted rounded">
-          0.1.0
-        </span>
+        <div className="flex items-center gap-1.5">
+          <div className={`w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-accent-success' : 'bg-white/20'}`} />
+          <span className="text-xs text-white/40">{isConnected ? 'Connected' : 'Connecting...'}</span>
+        </div>
       </div>
-
-      {/* Spacer */}
-      <div className="flex-1" />
-
-      {/* Window controls */}
-      <div className="flex items-center gap-1 no-drag">
-        <button
-          onClick={() => appWindow.minimize()}
-          className={cn(
-            "w-7 h-7 rounded-md flex items-center justify-center",
-            "text-muted-foreground hover:text-foreground hover:bg-muted",
-            "transition-colors duration-150"
-          )}
-        >
-          <Minus className="w-3.5 h-3.5" />
-        </button>
-        <button
-          onClick={() => appWindow.toggleMaximize()}
-          className={cn(
-            "w-7 h-7 rounded-md flex items-center justify-center",
-            "text-muted-foreground hover:text-foreground hover:bg-muted",
-            "transition-colors duration-150"
-          )}
-        >
-          <Square className="w-3 h-3" />
-        </button>
-        <button
-          onClick={() => appWindow.hide()}
-          className={cn(
-            "w-7 h-7 rounded-md flex items-center justify-center",
-            "text-muted-foreground hover:text-red-400 hover:bg-red-400/10",
-            "transition-colors duration-150"
-          )}
-        >
-          <X className="w-3.5 h-3.5" />
-        </button>
-      </div>
+      <div className="text-xs text-white/20 font-mono">v1.0.0</div>
     </div>
-  );
+  )
 }

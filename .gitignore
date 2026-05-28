@@ -1,50 +1,55 @@
-# Rust
-target/
-**/*.rs.bk
-Cargo.lock
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.csproj.user
+publish/
+TestResults/
 
-# Node
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# WebView2 cache
+webview2-cache/
+
+# Node / Frontend
 node_modules/
-.pnpm-store/
 dist/
-.next/
-.turbo/
+.pnpm-store/
+apps/desktop/.pnpm-debug.log
+apps/frontend/dist/
 
-# Tauri
-apps/desktop/src-tauri/target/
+# Build output embedded in App
+src/Ovvycmb.App/wwwroot/
 
 # Database
 *.db
 *.db-shm
 *.db-wal
-*.sqlite
 
-# Env
+# Logs
+*.log
+logs/
+
+# Environment
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
 # OS
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# IDE
-.vscode/
+# Editor
 .idea/
-*.suo
-*.user
-
-# Logs
-logs/
-*.log
-
-# Build artifacts
-*.exe
-*.msi
-*.AppImage
-*.deb
-
-# Telemetry/cache
-.cache/
-telemetry-data/
+.vscode/settings.json
+*.swp
+*~

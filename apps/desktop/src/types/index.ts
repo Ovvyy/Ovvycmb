@@ -1,96 +1,90 @@
-export type GameType = "dofus_unity" | "dofus_retro" | "wakfu";
-
-export type AccountStatus =
-  | "Offline"
-  | "Connecting"
-  | "Online"
-  | "InCombat"
-  | "Trading"
-  | "Idle"
-  | "Disconnected"
-  | "Crashed"
-  | "WaitingCaptcha";
+export type GameType = 'DofusUnity' | 'DofusRetro' | 'Wakfu'
+export type AccountStatus = 'Offline' | 'Connected' | 'InCombat' | 'Trading' | 'Idle' | 'Error'
+export type ReportSeverity = 'Info' | 'Low' | 'Medium' | 'High' | 'Critical'
+export type AgentType = 'Architect' | 'Security' | 'Performance' | 'QA' | 'CodeReviewer' | 'Refactor' | 'OcrVision'
+export type PluginStatus = 'Installed' | 'Enabled' | 'Disabled' | 'Error'
 
 export interface Account {
-  id: string;
-  name: string;
-  character_name?: string;
-  game_type: GameType;
-  status: AccountStatus;
-  process_id?: number;
-  window_handle?: number;
-  hp_current?: number;
-  hp_max?: number;
-  initiative?: number;
-  level?: number;
-  class?: string;
-  server?: string;
-  color_tag?: string;
-  notes?: string;
-  group_id?: string;
-  order_index: number;
-  last_seen: string;
-  created_at: string;
-}
-
-export interface WindowBounds {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-export interface Layout {
-  account_slot: number;
-  bounds: WindowBounds;
-  monitor_index: number;
-  z_order: number;
-  is_minimized: boolean;
+  id: string
+  name: string
+  characterName: string
+  gameType: GameType
+  status: AccountStatus
+  processId: number | null
+  hp: number
+  maxHp: number
+  initiative: number
+  level: number
+  class: string
+  server: string
+  colorTag: string
+  groupId: string | null
+  sortOrder: number
+  isActive: boolean
+  isFocused: boolean
+  createdAt: string
+  updatedAt: string
 }
 
 export interface LayoutProfile {
-  id: string;
-  name: string;
-  description?: string;
-  layouts: Layout[];
-  monitor_count: number;
-  is_default: boolean;
-  hotkey?: string;
-  created_at: string;
-  updated_at: string;
+  id: string
+  name: string
+  description: string | null
+  hotkey: string | null
+  monitorCount: number
+  isDefault: boolean
+  layouts: WindowLayout[]
+  createdAt: string
 }
 
-export interface MonitorInfo {
-  index: number;
-  name: string;
-  bounds: WindowBounds;
-  work_area: WindowBounds;
-  dpi: number;
-  is_primary: boolean;
+export interface WindowLayout {
+  accountId: string
+  monitorIndex: number
+  x: number
+  y: number
+  width: number
+  height: number
+  zOrder: number
 }
 
 export interface AgentReport {
-  id: string;
-  agent_id: string;
-  report_type: string;
-  summary: string;
-  findings: AgentFinding[];
-  metrics: Record<string, unknown>;
-  created_at: string;
+  id: string
+  agentType: AgentType
+  reportType: string
+  summary: string
+  details: string
+  severity: ReportSeverity
+  recommendations: string[]
+  createdAt: string
 }
 
-export interface AgentFinding {
-  title: string;
-  description: string;
-  severity: "Info" | "Warning" | "Critical" | "Suggestion";
-  location?: string;
-  suggestion?: string;
+export interface PluginManifest {
+  id: string
+  name: string
+  displayName: string
+  version: string
+  author: string
+  description: string | null
+  supportedGames: GameType[]
+  capabilities: string[]
+  status: PluginStatus
+  isOfficial: boolean
 }
 
-export type AppView =
-  | "dashboard"
-  | "accounts"
-  | "layout"
-  | "agents"
-  | "plugins"
-  | "settings";
+export interface DomainEvent {
+  id: string
+  type: string
+  accountId: string | null
+  message: string | null
+  payload: string | null
+  timestamp: string
+}
+
+export interface MonitorInfo {
+  index: number
+  name: string
+  bounds: { x: number; y: number; width: number; height: number }
+  workArea: { x: number; y: number; width: number; height: number }
+  isPrimary: boolean
+  scaleFactor: number
+}

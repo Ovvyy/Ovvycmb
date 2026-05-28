@@ -3,11 +3,15 @@ name: Release
 on:
   push:
     tags:
-      - "v*"
+      - 'v*'
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  NODE_VERSION: '20'
 
 jobs:
   release:
-    name: Create Release
+    name: Build & Release
     runs-on: windows-latest
     permissions:
       contents: write
@@ -15,34 +19,74 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-
-      - uses: pnpm/action-setup@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          version: 9
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node & pnpm
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "pnpm"
+          node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install deps
-        run: pnpm install --frozen-lockfile
+      - name: Install pnpm
+        run: npm install -g pnpm
 
-      - name: Build all
+      - name: Install and build frontend
+        working-directory: apps/desktop
         run: |
-          cargo build --release
-          pnpm --filter desktop build
+          pnpm install --frozen-lockfile
+          pnpm build
+
+      - name: Publish self-contained .exe
+        run: |
+          dotnet publish src/Ovvycmb.App/Ovvycmb.App.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:EnableCompressionInSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -o publish/
+
+      - name: Rename executable
+        run: Rename-Item publish/Ovvycmb.App.exe Ovvycmb.exe
+
+      - name: Determine pre-release
+        id: prerelease
+        run: |
+          if ("${{ github.ref_name }}" -match "(alpha|beta|rc|pre)") {
+            echo "is_prerelease=true" >> $env:GITHUB_OUTPUT
+          } else {
+            echo "is_prerelease=false" >> $env:GITHUB_OUTPUT
+          }
+        shell: pwsh
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            target/release/ovvycmb-daemon.exe
-            target/release/ovvycmb-overlay.exe
-            apps/desktop/src-tauri/target/release/bundle/msi/*.msi
-            apps/desktop/src-tauri/target/release/bundle/nsis/*.exe
-          generate_release_notes: true
+          name: Ovvycmb ${{ github.ref_name }}
           draft: false
-          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
+          prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
+          files: |
+            publish/Ovvycmb.exe
+          body: |
+            ## Ovvycmb ${{ github.ref_name }}
+
+            ### Installation
+            1. Download `Ovvycmb.exe`
+            2. Double-click to run — no installation required
+            3. Windows may show a SmartScreen warning on first launch — click "More info" → "Run anyway"
+
+            ### Requirements
+            - Windows 10/11 x64
+            - Microsoft Edge WebView2 Runtime (usually pre-installed on Windows 11)
+
+            ### What's included
+            - Premium DOFUS multi-account manager
+            - Automatic window detection and layout management
+            - Global hotkeys
+            - GPU-accelerated overlay
+            - AI-powered agents (requires Claude API key)
+            - Plugin system
+            - Real-time event monitoring

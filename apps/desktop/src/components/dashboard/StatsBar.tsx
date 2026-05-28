@@ -1,39 +1,37 @@
-import { Users, Sword, ArrowLeftRight, Wifi } from "lucide-react";
-import type { Account } from "@/types";
+import { useAppStore } from '@/stores/appStore'
+import { Users, Sword, ArrowLeftRight, Activity } from 'lucide-react'
 
-interface Props {
-  accounts: Account[];
-}
+export function StatsBar() {
+  const { accounts, isConnected } = useAppStore()
 
-export function StatsBar({ accounts }: Props) {
-  const total = accounts.length;
-  const online = accounts.filter((a) => a.status !== "Offline" && a.status !== "Crashed" && a.status !== "Disconnected").length;
-  const inCombat = accounts.filter((a) => a.status === "InCombat").length;
-  const trading = accounts.filter((a) => a.status === "Trading").length;
-
-  const stats = [
-    { label: "Comptes", value: total, icon: Users, color: "text-blue-400" },
-    { label: "En ligne", value: online, icon: Wifi, color: "text-green-400" },
-    { label: "En combat", value: inCombat, icon: Sword, color: "text-red-400" },
-    { label: "Échanges", value: trading, icon: ArrowLeftRight, color: "text-blue-300" },
-  ];
+  const stats = {
+    total: accounts.length,
+    online: accounts.filter(a => a.status !== 'Offline').length,
+    combat: accounts.filter(a => a.status === 'InCombat').length,
+    trading: accounts.filter(a => a.status === 'Trading').length,
+  }
 
   return (
-    <div className="grid grid-cols-4 gap-3 flex-shrink-0">
-      {stats.map((stat) => {
-        const Icon = stat.icon;
-        return (
-          <div key={stat.label} className="glass rounded-xl p-3 flex items-center gap-3">
-            <div className={`${stat.color} bg-current/10 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0`}>
-              <Icon className="w-4 h-4" style={{ color: "inherit" }} />
-            </div>
-            <div>
-              <p className="text-xl font-bold leading-none">{stat.value}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">{stat.label}</p>
-            </div>
-          </div>
-        );
-      })}
+    <div className="flex items-center gap-3">
+      <StatChip icon={<Users size={13} />} label="Total" value={stats.total} />
+      <StatChip icon={<Activity size={13} />} label="Online" value={stats.online} color="#22C55E" />
+      {stats.combat > 0 && <StatChip icon={<Sword size={13} />} label="Combat" value={stats.combat} color="#EF4444" />}
+      {stats.trading > 0 && <StatChip icon={<ArrowLeftRight size={13} />} label="Trading" value={stats.trading} color="#FFD700" />}
+      <div className="flex-1" />
+      <div className={`flex items-center gap-1.5 text-xs ${isConnected ? 'text-accent-success' : 'text-white/30'}`}>
+        <div className={`w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-accent-success' : 'bg-white/20'}`} />
+        {isConnected ? 'Live' : 'Offline'}
+      </div>
     </div>
-  );
+  )
+}
+
+function StatChip({ icon, label, value, color }: { icon: React.ReactNode; label: string; value: number; color?: string }) {
+  return (
+    <div className="flex items-center gap-1.5 px-3 py-1.5 glass rounded-lg text-xs">
+      <span style={{ color: color ?? 'rgba(255,255,255,0.4)' }}>{icon}</span>
+      <span className="text-white/40">{label}</span>
+      <span className="font-semibold" style={{ color: color ?? 'white' }}>{value}</span>
+    </div>
+  )
 }

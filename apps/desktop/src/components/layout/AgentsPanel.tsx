@@ -1,142 +1,95 @@
-import { useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { Bot, Play, ChevronDown, ChevronUp, AlertTriangle, Info, Zap } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
-import type { AgentReport } from "@/types";
+import { useAppStore } from '@/stores/appStore'
+import { Bot, Play, FileText } from 'lucide-react'
+import type { AgentType } from '@/types'
 
-const AGENTS = [
-  { id: "architect", name: "Architect", description: "Analyse l'architecture et la dette technique", color: "text-blue-400" },
-  { id: "security", name: "Security", description: "Scan de vulnérabilités et sécurité", color: "text-red-400" },
-  { id: "performance", name: "Performance", description: "Profiling CPU/RAM et détection de leaks", color: "text-green-400" },
-  { id: "qa", name: "QA", description: "Génération de tests et stress testing", color: "text-purple-400" },
-  { id: "code_reviewer", name: "Code Reviewer", description: "Review qualité et conventions", color: "text-yellow-400" },
-  { id: "refactor", name: "Refactor", description: "Suggestions d'améliorations structurelles", color: "text-orange-400" },
-  { id: "ocr_vision", name: "OCR/Vision", description: "Calibration pipeline de détection", color: "text-teal-400" },
-];
+const AGENTS: { type: AgentType; label: string; description: string; icon: string }[] = [
+  { type: 'Architect', label: 'Architect', description: 'Reviews architecture and technical debt', icon: '🏛' },
+  { type: 'Security', label: 'Security', description: 'Scans for vulnerabilities and unsafe patterns', icon: '🔒' },
+  { type: 'Performance', label: 'Performance', description: 'Profiles CPU/RAM and detects bottlenecks', icon: '⚡' },
+  { type: 'QA', label: 'QA', description: 'Generates test strategies and edge cases', icon: '🧪' },
+  { type: 'CodeReviewer', label: 'Code Review', description: 'Reviews code quality and conventions', icon: '👁' },
+  { type: 'Refactor', label: 'Refactor', description: 'Proposes structural improvements', icon: '🔧' },
+  { type: 'OcrVision', label: 'OCR Vision', description: 'Calibrates the screen detection pipeline', icon: '👀' },
+]
 
 export function AgentsPanel() {
-  const [running, setRunning] = useState<string | null>(null);
-  const [reports, setReports] = useState<Record<string, AgentReport>>({});
-  const [expanded, setExpanded] = useState<string | null>(null);
+  const { agentReports, runningAgents, setAgentRunning, setAgentReports } = useAppStore()
 
-  const runAgent = async (agentId: string) => {
-    setRunning(agentId);
+  const runAgent = async (agentType: AgentType) => {
+    setAgentRunning(agentType, true)
     try {
-      const report = await invoke<AgentReport>("run_agent", {
-        agentId,
-        args: {},
-      });
-      setReports((prev) => ({ ...prev, [agentId]: report }));
-      setExpanded(agentId);
-    } catch (e) {
-      console.error(e);
+      await fetch(`/api/agents/run`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ agentType }),
+      })
     } finally {
-      setRunning(null);
+      setAgentRunning(agentType, false)
     }
-  };
+  }
 
   return (
-    <div className="h-full flex flex-col p-4 gap-4 overflow-y-auto">
-      <div>
-        <h1 className="text-lg font-semibold">Agents IA</h1>
-        <p className="text-sm text-muted-foreground">
-          Système multi-agents d'analyse et de validation
-        </p>
+    <div className="p-6">
+      <div className="flex items-center gap-3 mb-6">
+        <Bot size={20} className="text-brand-400" />
+        <div>
+          <h1 className="text-xl font-semibold">AI Agents</h1>
+          <p className="text-sm text-white/40 mt-0.5">Claude-powered analysis agents</p>
+        </div>
       </div>
 
-      <div className="space-y-2">
-        {AGENTS.map((agent) => {
-          const report = reports[agent.id];
-          const isExpanded = expanded === agent.id;
-          const isRunning = running === agent.id;
-
-          return (
-            <div key={agent.id} className="glass rounded-xl overflow-hidden">
-              <div className="p-3 flex items-center gap-3">
-                <div className={cn("w-8 h-8 rounded-lg bg-current/10 flex items-center justify-center flex-shrink-0", agent.color)}>
-                  <Bot className="w-4 h-4" style={{ color: "currentColor" }} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold">{agent.name}</p>
-                    {report && (
-                      <span className="text-xs px-1.5 py-0.5 bg-green-500/10 text-green-400 rounded">
-                        Rapport disponible
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-muted-foreground truncate">{agent.description}</p>
-                </div>
-                <div className="flex items-center gap-1">
-                  {report && (
-                    <button
-                      onClick={() => setExpanded(isExpanded ? null : agent.id)}
-                      className="w-7 h-7 rounded-lg hover:bg-muted flex items-center justify-center text-muted-foreground"
-                    >
-                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                    </button>
-                  )}
-                  <button
-                    onClick={() => runAgent(agent.id)}
-                    disabled={isRunning}
-                    className={cn(
-                      "w-7 h-7 rounded-lg flex items-center justify-center transition-colors",
-                      isRunning
-                        ? "bg-primary/20 text-primary animate-pulse"
-                        : "hover:bg-primary/10 text-muted-foreground hover:text-primary"
-                    )}
-                  >
-                    {isRunning ? (
-                      <span className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <Play className="w-3.5 h-3.5" />
-                    )}
-                  </button>
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        {AGENTS.map(agent => (
+          <div key={agent.type} className="glass rounded-xl p-4">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">{agent.icon}</span>
+                <div>
+                  <p className="font-medium text-sm">{agent.label}</p>
+                  <p className="text-xs text-white/40 mt-0.5">{agent.description}</p>
                 </div>
               </div>
-
-              {/* Report */}
-              <AnimatePresence>
-                {isExpanded && report && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="border-t border-border/50 p-3 space-y-3"
-                  >
-                    <p className="text-xs text-muted-foreground">{report.summary}</p>
-                    {report.findings.map((f, i) => (
-                      <div key={i} className={cn(
-                        "flex items-start gap-2 p-2 rounded-lg text-xs",
-                        f.severity === "Critical" && "bg-red-500/10",
-                        f.severity === "Warning" && "bg-yellow-500/10",
-                        (f.severity === "Info" || f.severity === "Suggestion") && "bg-muted/50"
-                      )}>
-                        {f.severity === "Critical" ? (
-                          <AlertTriangle className="w-3 h-3 text-red-400 mt-0.5 flex-shrink-0" />
-                        ) : f.severity === "Warning" ? (
-                          <AlertTriangle className="w-3 h-3 text-yellow-400 mt-0.5 flex-shrink-0" />
-                        ) : (
-                          <Info className="w-3 h-3 text-blue-400 mt-0.5 flex-shrink-0" />
-                        )}
-                        <div>
-                          <p className="font-semibold">{f.title}</p>
-                          <p className="text-muted-foreground mt-0.5">{f.description}</p>
-                          {f.suggestion && (
-                            <p className="text-primary/80 mt-1">→ {f.suggestion}</p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </motion.div>
+              <button
+                onClick={() => runAgent(agent.type)}
+                disabled={runningAgents.has(agent.type)}
+                className="p-2 rounded-lg bg-brand-500/20 hover:bg-brand-500/30 text-brand-400 transition-colors disabled:opacity-50"
+                title="Run agent"
+              >
+                {runningAgents.has(agent.type) ? (
+                  <div className="w-3 h-3 border border-brand-400 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Play size={12} />
                 )}
-              </AnimatePresence>
+              </button>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
+
+      {agentReports.length > 0 && (
+        <div>
+          <h2 className="text-sm font-medium text-white/60 mb-3 flex items-center gap-2">
+            <FileText size={14} />
+            Recent Reports
+          </h2>
+          <div className="space-y-2">
+            {agentReports.slice(0, 5).map(report => (
+              <div key={report.id} className="glass rounded-lg p-3">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-medium">{report.agentType} · {report.reportType}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${
+                    report.severity === 'Critical' ? 'bg-accent-danger/20 text-accent-danger' :
+                    report.severity === 'High' ? 'bg-orange-500/20 text-orange-400' :
+                    report.severity === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                    'bg-blue-500/20 text-blue-400'
+                  }`}>{report.severity}</span>
+                </div>
+                <p className="text-xs text-white/60">{report.summary}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
-  );
+  )
 }

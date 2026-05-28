@@ -1,217 +1,103 @@
-import { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { Save, Sliders, Keyboard, Eye, Bot, Shield } from "lucide-react";
-import { cn } from "@/lib/utils";
-
-type SettingsTab = "general" | "overlay" | "hotkeys" | "ai" | "security";
-
-const TABS: { id: SettingsTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-  { id: "general", label: "Général", icon: Sliders },
-  { id: "overlay", label: "Overlay", icon: Eye },
-  { id: "hotkeys", label: "Raccourcis", icon: Keyboard },
-  { id: "ai", label: "Agents IA", icon: Bot },
-  { id: "security", label: "Sécurité", icon: Shield },
-];
+import { useState } from 'react'
+import { Settings as SettingsIcon, Key, Monitor, Palette } from 'lucide-react'
 
 export function Settings() {
-  const [activeTab, setActiveTab] = useState<SettingsTab>("general");
-  const [config, setConfig] = useState<any>(null);
+  const [apiKey, setApiKey] = useState('')
+  const [saved, setSaved] = useState(false)
 
-  useEffect(() => {
-    invoke("get_config").then(setConfig).catch(console.error);
-  }, []);
-
-  const updateConfig = async (key: string, value: unknown) => {
-    await invoke("update_config", { key, value });
-    setConfig((c: any) => ({ ...c }));
-  };
+  const handleSave = async () => {
+    await fetch('/api/system/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ claudeApiKey: apiKey }),
+    }).catch(() => {})
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+  }
 
   return (
-    <div className="h-full flex gap-0 overflow-hidden">
-      {/* Tab sidebar */}
-      <div className="w-44 border-r border-border/50 p-3 flex-shrink-0 space-y-1">
-        {TABS.map((tab) => {
-          const Icon = tab.icon;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors text-left",
-                activeTab === tab.id
-                  ? "bg-primary/10 text-primary font-medium"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/80"
-              )}
-            >
-              <Icon className="w-4 h-4 flex-shrink-0" />
-              {tab.label}
-            </button>
-          );
-        })}
+    <div className="p-6 max-w-2xl">
+      <div className="flex items-center gap-3 mb-6">
+        <SettingsIcon size={20} className="text-brand-400" />
+        <h1 className="text-xl font-semibold">Settings</h1>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
-        {activeTab === "general" && (
-          <GeneralSettings config={config} onUpdate={updateConfig} />
-        )}
-        {activeTab === "overlay" && (
-          <OverlaySettings config={config} onUpdate={updateConfig} />
-        )}
-        {activeTab === "hotkeys" && <HotkeySettings config={config} />}
-        {activeTab === "ai" && <AiSettings config={config} onUpdate={updateConfig} />}
-        {activeTab === "security" && <SecuritySettings />}
+      <div className="space-y-6">
+        {/* AI Configuration */}
+        <section className="glass rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Key size={15} className="text-brand-400" />
+            <h2 className="font-medium">AI Agents</h2>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs text-white/50 block mb-1.5">Claude API Key</label>
+              <div className="flex gap-2">
+                <input
+                  type="password"
+                  value={apiKey}
+                  onChange={e => setApiKey(e.target.value)}
+                  placeholder="sk-ant-..."
+                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/20 focus:outline-none focus:border-brand-500/50"
+                />
+                <button
+                  onClick={handleSave}
+                  className="btn-primary text-sm px-4"
+                >
+                  {saved ? '✓ Saved' : 'Save'}
+                </button>
+              </div>
+              <p className="text-xs text-white/30 mt-1.5">Required for AI agents. Your key stays local.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* General */}
+        <section className="glass rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Monitor size={15} className="text-brand-400" />
+            <h2 className="font-medium">Window Management</h2>
+          </div>
+          <div className="space-y-3">
+            <ToggleSetting label="Enable GPU overlay" description="Show HP bars and alerts over game windows" defaultChecked />
+            <ToggleSetting label="Start minimized" description="Start Ovvycmb in the system tray" />
+            <ToggleSetting label="Start with Windows" description="Launch automatically on startup" />
+          </div>
+        </section>
+
+        {/* App info */}
+        <section className="glass rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <Palette size={15} className="text-brand-400" />
+            <h2 className="font-medium">About</h2>
+          </div>
+          <div className="text-xs text-white/40 space-y-1">
+            <p>Ovvycmb v1.0.0 — Premium DOFUS Multi-Account Organizer</p>
+            <p>Built with C# .NET 8 · WPF · WebView2 · ASP.NET Core · React</p>
+            <p className="text-white/20 mt-2">IPC Server: localhost:7337 · Metrics: /metrics · API Docs: /swagger</p>
+          </div>
+        </section>
       </div>
     </div>
-  );
+  )
 }
 
-function GeneralSettings({ config, onUpdate }: any) {
-  return (
-    <div className="space-y-4">
-      <h2 className="text-base font-semibold">Paramètres généraux</h2>
-      <SettingRow
-        label="Réduire dans la barre système"
-        description="Fermer ne quitte pas l'application"
-      >
-        <Toggle
-          checked={config?.general?.minimize_to_tray ?? true}
-          onChange={(v) => onUpdate("general.minimize_to_tray", v)}
-        />
-      </SettingRow>
-      <SettingRow
-        label="Démarrer avec Windows"
-        description="Lancer automatiquement au démarrage"
-      >
-        <Toggle
-          checked={config?.general?.start_with_windows ?? false}
-          onChange={(v) => onUpdate("general.start_with_windows", v)}
-        />
-      </SettingRow>
-    </div>
-  );
-}
-
-function OverlaySettings({ config, onUpdate }: any) {
-  return (
-    <div className="space-y-4">
-      <h2 className="text-base font-semibold">Overlay</h2>
-      <SettingRow label="Activer l'overlay" description="Afficher l'overlay GPU sur les fenêtres">
-        <Toggle
-          checked={config?.overlay?.enabled ?? true}
-          onChange={(v) => onUpdate("overlay.enabled", v)}
-        />
-      </SettingRow>
-      <SettingRow label="Opacité" description="Transparence de l'overlay (0-100%)">
-        <input
-          type="range"
-          min={0}
-          max={1}
-          step={0.05}
-          defaultValue={config?.overlay?.opacity ?? 0.85}
-          onChange={(e) => onUpdate("overlay.opacity", parseFloat(e.target.value))}
-          className="w-32"
-        />
-      </SettingRow>
-    </div>
-  );
-}
-
-function HotkeySettings({ config }: any) {
-  return (
-    <div className="space-y-4">
-      <h2 className="text-base font-semibold">Raccourcis clavier</h2>
-      {[
-        { key: "focus_next", label: "Focus compte suivant", default: config?.hotkeys?.focus_next ?? "Alt+Tab" },
-        { key: "focus_prev", label: "Focus compte précédent", default: config?.hotkeys?.focus_prev ?? "Alt+Shift+Tab" },
-        { key: "apply_layout", label: "Appliquer le layout", default: config?.hotkeys?.apply_layout ?? "Ctrl+Alt+L" },
-        { key: "toggle_overlay", label: "Toggle overlay", default: config?.hotkeys?.toggle_overlay ?? "Ctrl+Alt+O" },
-        { key: "emergency_stop", label: "Arrêt d'urgence", default: config?.hotkeys?.emergency_stop ?? "Ctrl+Alt+X" },
-      ].map((item) => (
-        <div key={item.key} className="flex items-center justify-between py-2">
-          <span className="text-sm">{item.label}</span>
-          <kbd className="text-xs bg-muted border border-border px-2 py-1 rounded font-mono">
-            {item.default}
-          </kbd>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function AiSettings({ config, onUpdate }: any) {
-  const [apiKey, setApiKey] = useState("");
-
-  return (
-    <div className="space-y-4">
-      <h2 className="text-base font-semibold">Agents IA</h2>
-      <SettingRow label="Activer les agents IA" description="Nécessite une clé API Anthropic">
-        <Toggle
-          checked={config?.ai?.enabled ?? false}
-          onChange={(v) => onUpdate("ai.enabled", v)}
-        />
-      </SettingRow>
-      <div className="space-y-1">
-        <label className="text-sm font-medium">Clé API Anthropic</label>
-        <p className="text-xs text-muted-foreground">Stockée de façon sécurisée dans le système</p>
-        <input
-          type="password"
-          placeholder="sk-ant-..."
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-ring font-mono"
-        />
-      </div>
-    </div>
-  );
-}
-
-function SecuritySettings() {
-  return (
-    <div className="space-y-4">
-      <h2 className="text-base font-semibold">Sécurité & Confidentialité</h2>
-      <div className="glass rounded-xl p-4 space-y-2">
-        <p className="text-sm font-medium text-green-400">✓ Serveur IPC local uniquement</p>
-        <p className="text-sm font-medium text-green-400">✓ Aucune injection de paquets réseau</p>
-        <p className="text-sm font-medium text-green-400">✓ Aucun contournement anti-triche</p>
-        <p className="text-sm font-medium text-green-400">✓ Plugins isolés via sandbox WASM</p>
-        <p className="text-sm font-medium text-green-400">✓ Données stockées localement uniquement</p>
-      </div>
-    </div>
-  );
-}
-
-function SettingRow({ label, description, children }: {
-  label: string;
-  description?: string;
-  children: React.ReactNode;
+function ToggleSetting({ label, description, defaultChecked = false }: {
+  label: string; description: string; defaultChecked?: boolean
 }) {
+  const [enabled, setEnabled] = useState(defaultChecked)
   return (
-    <div className="flex items-center justify-between py-2 border-b border-border/30">
+    <div className="flex items-center justify-between">
       <div>
-        <p className="text-sm font-medium">{label}</p>
-        {description && <p className="text-xs text-muted-foreground">{description}</p>}
+        <p className="text-sm">{label}</p>
+        <p className="text-xs text-white/40 mt-0.5">{description}</p>
       </div>
-      {children}
+      <button
+        onClick={() => setEnabled(!enabled)}
+        className={`w-10 h-6 rounded-full transition-colors ${enabled ? 'bg-brand-500' : 'bg-white/10'}`}
+      >
+        <div className={`w-4 h-4 bg-white rounded-full mx-1 transition-transform ${enabled ? 'translate-x-4' : ''}`} />
+      </button>
     </div>
-  );
-}
-
-function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
-  return (
-    <button
-      onClick={() => onChange(!checked)}
-      className={cn(
-        "relative w-10 h-5.5 rounded-full transition-colors",
-        checked ? "bg-primary" : "bg-muted"
-      )}
-    >
-      <span
-        className={cn(
-          "absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform",
-          checked ? "translate-x-5" : "translate-x-0.5"
-        )}
-      />
-    </button>
-  );
+  )
 }
