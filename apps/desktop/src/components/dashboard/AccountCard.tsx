@@ -1,106 +1,121 @@
-import { Focus, MoreVertical, Sword, RefreshCw } from "lucide-react";
-import { motion } from "framer-motion";
-import { cn, statusDot, statusColor, gameTypeLabel, gameTypeColor, hpColor } from "@/lib/utils";
-import { useAppStore } from "@/stores/appStore";
-import type { Account } from "@/types";
+import { motion } from 'framer-motion'
+import { Monitor, Sword, ArrowUpRight } from 'lucide-react'
+import type { Account } from '@/types'
+import { cn, getGameTypeLabel, getStatusColor, getStatusLabel, hpPercent } from '@/lib/utils'
+import { api } from '@/api/apiClient'
 
 interface Props {
-  account: Account;
+  account: Account
 }
 
 export function AccountCard({ account }: Props) {
-  const { focusAccount, removeAccount } = useAppStore();
+  const hp = hpPercent(account.hp, account.maxHp)
+  const isOnline = account.status !== 'Offline'
+  const isInCombat = account.status === 'InCombat'
 
-  const hpPercent =
-    account.hp_current && account.hp_max
-      ? Math.round((account.hp_current / account.hp_max) * 100)
-      : null;
-
-  const isInCombat = account.status === "InCombat";
-  const isCritical = hpPercent !== null && hpPercent <= 25;
+  const handleFocus = async () => {
+    try {
+      await api.accounts.focus(account.id)
+    } catch (err) {
+      console.error('Focus failed:', err)
+    }
+  }
 
   return (
-    <div
+    <motion.div
+      whileHover={{ scale: 1.01 }}
       className={cn(
-        "glass rounded-xl p-3 border transition-all duration-200 cursor-pointer group",
-        "hover:border-border hover:bg-card/60",
-        isInCombat && "border-red-500/30 bg-red-500/5 turn-active",
-        isCritical && "hp-bar-critical"
+        'glass rounded-xl p-4 cursor-pointer group relative overflow-hidden',
+        isInCombat && 'border-accent-danger/30',
+        !isOnline && 'opacity-60'
       )}
-      style={{ borderLeftColor: account.color_tag ?? undefined, borderLeftWidth: account.color_tag ? 3 : 1 }}
+      style={{ borderLeft: `3px solid ${account.colorTag}` }}
     >
-      {/* Header */}
-      <div className="flex items-start justify-between mb-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <div className={cn("w-2 h-2 rounded-full flex-shrink-0", statusDot(account.status))} />
-          <div className="min-w-0">
-            <p className="text-sm font-semibold truncate leading-tight">
-              {account.character_name ?? account.name}
-            </p>
-            {account.character_name && (
-              <p className="text-xs text-muted-foreground truncate">{account.name}</p>
+      {/* Glow effect for active */}
+      {isOnline && (
+        <div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+          style={{ background: `radial-gradient(ellipse at top left, ${account.colorTag}15, transparent 60%)` }}
+        />
+      )}
+
+      <div className="flex items-start justify-between mb-3">
+        <div>
+          <p className="font-semibold text-sm">{account.characterName || account.name}</p>
+          <div className="flex items-center gap-1.5 mt-0.5">
+            <span className="text-xs text-white/40">{getGameTypeLabel(account.gameType)}</span>
+            {account.level > 0 && (
+              <>
+                <span className="text-white/20">·</span>
+                <span className="text-xs text-white/40">Lv.{account.level}</span>
+              </>
+            )}
+            {account.server && (
+              <>
+                <span className="text-white/20">·</span>
+                <span className="text-xs text-white/40">{account.server}</span>
+              </>
             )}
           </div>
         </div>
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-1">
+        <div className="flex items-center gap-2">
+          <div className={cn('status-dot', account.status.toLowerCase())} />
           <button
-            onClick={(e) => { e.stopPropagation(); focusAccount(account.id); }}
-            title="Focus"
-            className="w-6 h-6 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground"
+            onClick={handleFocus}
+            className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-white/10 transition-all"
+            title="Focus window"
           >
-            <Focus className="w-3 h-3" />
+            <ArrowUpRight size={12} className="text-white/60" />
           </button>
         </div>
       </div>
 
-      {/* Game type + level */}
-      <div className="flex items-center justify-between mb-2">
-        <span className={cn("text-xs font-medium", gameTypeColor(account.game_type))}>
-          {gameTypeLabel(account.game_type)}
-        </span>
-        {account.level && (
-          <span className="text-xs text-muted-foreground">Niv. {account.level}</span>
-        )}
-      </div>
-
-      {/* HP bar */}
-      {hpPercent !== null && (
-        <div className="mb-2">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-xs text-muted-foreground">HP</span>
-            <span className={cn(
-              "text-xs font-mono font-medium",
-              isCritical ? "text-red-400" : "text-foreground/70"
-            )}>
-              {account.hp_current} / {account.hp_max}
-            </span>
+      {/* HP Bar */}
+      {account.maxHp > 0 && (
+        <div className="mb-3">
+          <div className="flex justify-between text-xs text-white/40 mb-1">
+            <span>HP</span>
+            <span>{account.hp}/{account.maxHp}</span>
           </div>
-          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+          <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
             <motion.div
-              className={cn("h-full rounded-full", hpColor(hpPercent))}
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${hp}%`,
+                background: hp > 50 ? '#22C55E' : hp > 25 ? '#F59E0B' : '#EF4444',
+              }}
               initial={{ width: 0 }}
-              animate={{ width: `${hpPercent}%` }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              animate={{ width: `${hp}%` }}
             />
           </div>
         </div>
       )}
 
-      {/* Status + combat indicator */}
       <div className="flex items-center justify-between">
-        <span className={cn("text-xs font-medium", statusColor(account.status))}>
-          {account.status}
-        </span>
-        {isInCombat && (
-          <span className="flex items-center gap-1 text-xs text-red-400">
-            <Sword className="w-3 h-3" />
-            Combat
-          </span>
-        )}
-        {account.server && (
-          <span className="text-xs text-muted-foreground">{account.server}</span>
-        )}
+        <div className="flex items-center gap-3 text-xs text-white/40">
+          {account.initiative > 0 && (
+            <div className="flex items-center gap-1">
+              <Sword size={10} />
+              <span>{account.initiative}</span>
+            </div>
+          )}
+          {account.processId && (
+            <div className="flex items-center gap-1">
+              <Monitor size={10} />
+              <span>PID {account.processId}</span>
+            </div>
+          )}
+        </div>
+        <div
+          className="text-xs px-2 py-0.5 rounded-full font-medium"
+          style={{
+            color: getStatusColor(account.status),
+            background: `${getStatusColor(account.status)}20`,
+          }}
+        >
+          {getStatusLabel(account.status)}
+        </div>
       </div>
-    </div>
-  );
+    </motion.div>
+  )
 }

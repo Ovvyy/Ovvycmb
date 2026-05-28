@@ -3,89 +3,143 @@
 ## Project Overview
 
 **Ovvycmb** is a premium multi-account organizer for DOFUS, DOFUS Retro, and WAKFU.
-It is a Windows-first desktop application built with Rust + Tauri + React.
+It is a Windows-first desktop application built with C# .NET 8 + WPF + WebView2 + React.
 
 ## Stack
 
-- **Backend**: Rust (workspace of crates)
+- **Backend**: C# .NET 8 (multi-project solution)
+- **Desktop Host**: WPF + WebView2 (renders React frontend)
 - **Frontend**: React 18 + TypeScript + Tailwind CSS + Framer Motion
-- **Desktop**: Tauri v2
-- **Database**: SQLite via sqlx
-- **IPC**: Axum WebSocket + REST (port 7337)
-- **Plugins**: WASM via Wasmtime
-- **AI**: Claude API (Anthropic) — optional, requires API key
+- **IPC**: ASP.NET Core Minimal API + SignalR (port 7337)
+- **Database**: SQLite via Entity Framework Core
+- **AI**: Claude API (Anthropic) via HTTP — optional, requires API key
+- **Overlay**: WPF transparent click-through window
 
 ## Key Commands
 
 ```bash
-# Frontend dev
-pnpm --filter desktop dev
-
-# Tauri dev (needs Rust + Node)
-pnpm --filter desktop tauri dev
-
-# Build all Rust crates
-cargo build --workspace
+# Build the entire solution
+dotnet build Ovvycmb.sln
 
 # Run tests
-cargo test --workspace
+dotnet test Ovvycmb.sln
 
-# Build daemon
-cargo build --bin ovvycmb-daemon
+# Lint
+dotnet build Ovvycmb.sln -warnaserror
 
-# Lint Rust
-cargo clippy --all-targets -- -D warnings
+# Frontend dev server (proxies to C# backend)
+cd apps/desktop && pnpm dev
 
-# Format Rust
-cargo fmt --all
+# Build frontend (outputs to src/Ovvycmb.App/wwwroot/)
+cd apps/desktop && pnpm build
 
-# Typecheck frontend
-pnpm --filter desktop typecheck
+# Publish single .exe (Windows x64, self-contained)
+dotnet publish src/Ovvycmb.App/Ovvycmb.App.csproj \
+  -c Release -r win-x64 \
+  --self-contained true \
+  -p:PublishSingleFile=true \
+  -p:EnableCompressionInSingleFile=true \
+  -o publish/
+
+# Full build (frontend + backend)
+cd apps/desktop && pnpm build && cd ../.. && dotnet publish src/Ovvycmb.App/Ovvycmb.App.csproj -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o publish/
 ```
 
 ## Repository Structure
 
 ```
-apps/desktop/     → Tauri desktop app (main UI)
-apps/daemon/      → Background daemon process (IPC server, scanner)
-apps/overlay/     → Direct2D GPU overlay
-crates/core/      → Domain models, events, config, state
-crates/window-manager/ → WinAPI window detection + layout
-crates/hotkeys/   → Global hotkey registration
-crates/ocr/       → Screen capture + detection pipeline
-crates/ipc/       → Axum REST+WS server
-crates/storage/   → SQLite repositories
-crates/ai-agents/ → Claude-powered AI agents
-crates/plugin-sdk/ → WASM plugin host
-crates/telemetry/ → Tracing + metrics
-plugins/          → Official game plugins (DOFUS Unity, Retro, WAKFU)
-docs/             → Architecture docs
+Ovvycmb.sln                  → Solution file
+Directory.Build.props         → Shared MSBuild properties
+Directory.Packages.props      → Centralized NuGet versions
+
+src/
+  Ovvycmb.Core/              → Domain models, events, interfaces
+  Ovvycmb.Storage/           → EF Core + SQLite repositories
+  Ovvycmb.WindowManager/     → WinAPI P/Invoke (window detection + layout)
+  Ovvycmb.Hotkeys/           → Global hotkey registration
+  Ovvycmb.Ipc/               → ASP.NET Core API + SignalR hub
+  Ovvycmb.Services/          → Business logic services
+  Ovvycmb.AI/                → Claude AI agents (7 specialized)
+  Ovvycmb.Plugins/           → Plugin SDK + host (MEF-style)
+  Ovvycmb.Overlay/           → WPF transparent GPU overlay
+  Ovvycmb.Telemetry/         → Serilog + Prometheus metrics
+  Ovvycmb.App/               → WPF host + WebView2 (main .exe)
+
+apps/
+  desktop/                   → React + TypeScript + Tailwind frontend
+
+plugins/                     → Official game plugins (C#)
+docs/                        → Architecture documentation
 ```
 
-## Architecture Principles
+## Architecture
 
-1. **Event-driven**: All inter-component communication via `EventBus` (broadcast channel)
-2. **Capability-based security**: Plugins restricted via WASM sandbox
-3. **No packet injection**: Only WinAPI/SendMessage automation
-4. **Local-first**: No external telemetry, all data stays on device
-5. **Modular**: Each crate has a single responsibility
+```
+┌─────────────────────────────────────────────┐
+│  Ovvycmb.App (WPF + WebView2)               │
+│  ┌─────────────────────────────────────┐    │
+│  │  React UI (Tailwind + Framer Motion) │    │
+│  │  ← SignalR events                   │    │
+│  │  → REST API calls                   │    │
+│  └─────────────────────────────────────┘    │
+│                                             │
+│  ASP.NET Core (in-process, port 7337)       │
+│  ├── /api/* — Minimal API endpoints         │
+│  ├── /hub   — SignalR hub                   │
+│  └── /metrics — Prometheus                  │
+│                                             │
+│  Services                                   │
+│  ├── MonitoringService (background scan)    │
+│  ├── AccountService                         │
+│  └── LayoutService                          │
+│                                             │
+│  Infrastructure                             │
+│  ├── EventBus (in-memory broadcast)         │
+│  ├── SQLite / EF Core                       │
+│  ├── WindowManager (WinAPI P/Invoke)        │
+│  ├── HotkeyService (RegisterHotKey)         │
+│  ├── OverlayWindow (WPF transparent)        │
+│  ├── AI Agents (Claude API)                 │
+│  └── PluginHost (Assembly.LoadFrom)         │
+└─────────────────────────────────────────────┘
+```
 
 ## Code Standards
 
-- Use `thiserror` for library errors, `anyhow` for binary errors
-- All async code via `tokio`
-- Structured logging via `tracing` (not `println!`)
-- Windows-specific code gated behind `#[cfg(target_os = "windows")]`
-- Non-Windows must compile (stub implementations required)
+- Use C# nullable reference types everywhere
+- All async methods use `CancellationToken`
+- Use `ILogger<T>` via DI (no Console.WriteLine)
+- Windows-specific code: test with `RuntimeInformation.IsOSPlatform(OSPlatform.Windows)` or `#if WINDOWS`
+- Domain events via `IEventBus` — never direct method calls between modules
+- EF Core repositories use scoped lifetime
+- SignalR hub handles all real-time push to frontend
+- No packet injection, no memory modification, no anti-cheat bypass
 
-## Windows-only code
+## Architecture Principles
 
-Always provide stubs for non-Windows platforms so the codebase compiles in CI on Linux:
+1. **Event-driven**: All inter-module communication via `IEventBus`
+2. **Local-first**: No external telemetry, all data on device
+3. **Modular**: Each project has a single responsibility
+4. **Windows-native**: WinAPI for window management, zero web dependencies for core features
+5. **Plugin-safe**: Plugins load into app domain (no WASM sandbox — full trust required)
 
-```rust
-#[cfg(target_os = "windows")]
-fn windows_only() { ... }
+## IPC Endpoints
 
-#[cfg(not(target_os = "windows"))]
-fn windows_only() { /* stub */ }
-```
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | /api/accounts | List all accounts |
+| POST | /api/accounts | Create account |
+| PUT | /api/accounts/{id} | Update account |
+| DELETE | /api/accounts/{id} | Delete account |
+| POST | /api/accounts/{id}/focus | Focus game window |
+| GET | /api/layouts | List layouts |
+| POST | /api/layouts | Create layout |
+| POST | /api/layouts/{id}/apply | Apply layout |
+| POST | /api/layouts/auto-generate | Auto-generate grid layout |
+| GET | /api/system/health | Health check |
+| GET | /api/system/monitors | List monitors |
+| GET | /api/system/clients | List detected clients |
+| GET | /api/events | Recent events |
+| WS | /hub | SignalR real-time events |
+| GET | /swagger | API documentation |
+| GET | /metrics | Prometheus metrics |

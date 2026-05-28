@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ovvycmb.Core\Ovvycmb.Core.csproj" />
+    <ProjectReference Include="..\Ovvycmb.Services\Ovvycmb.Services.csproj" />
+    <ProjectReference Include="..\Ovvycmb.Storage\Ovvycmb.Storage.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="prometheus-net.AspNetCore" />
+  </ItemGroup>
+</Project>

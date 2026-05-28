@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ovvycmb.Core\Ovvycmb.Core.csproj" />
+    <ProjectReference Include="..\Ovvycmb.Storage\Ovvycmb.Storage.csproj" />
+    <ProjectReference Include="..\Ovvycmb.WindowManager\Ovvycmb.WindowManager.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+  </ItemGroup>
+</Project>

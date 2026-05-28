@@ -1,111 +1,60 @@
-import {
-  LayoutGrid,
-  Users,
-  Monitor,
-  Bot,
-  Puzzle,
-  Settings,
-  Wifi,
-  WifiOff,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useAppStore } from "@/stores/appStore";
-import type { AppView } from "@/types";
+import { motion } from 'framer-motion'
+import { LayoutGrid, Layers, Bot, Puzzle, Settings } from 'lucide-react'
+import { useAppStore } from '@/stores/appStore'
+import { cn } from '@/lib/utils'
 
-interface NavItem {
-  id: AppView;
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  badge?: number;
-}
-
-const NAV_ITEMS: NavItem[] = [
-  { id: "dashboard", icon: LayoutGrid, label: "Dashboard" },
-  { id: "accounts", icon: Users, label: "Comptes" },
-  { id: "layout", icon: Monitor, label: "Layout" },
-  { id: "agents", icon: Bot, label: "Agents IA" },
-  { id: "plugins", icon: Puzzle, label: "Plugins" },
-];
+const NAV_ITEMS = [
+  { id: 'dashboard', icon: LayoutGrid, label: 'Dashboard' },
+  { id: 'layout', icon: Layers, label: 'Layouts' },
+  { id: 'agents', icon: Bot, label: 'AI Agents' },
+  { id: 'plugins', icon: Puzzle, label: 'Plugins' },
+  { id: 'settings', icon: Settings, label: 'Settings' },
+] as const
 
 export function Sidebar() {
-  const { activeView, setActiveView, accounts } = useAppStore();
-  const onlineCount = accounts.filter(
-    (a) => !["Offline", "Crashed", "Disconnected"].includes(a.status)
-  ).length;
+  const { activeView, setActiveView, accounts } = useAppStore()
+  const onlineCount = accounts.filter(a => a.status !== 'Offline').length
+  const combatCount = accounts.filter(a => a.status === 'InCombat').length
 
   return (
-    <aside className="w-16 flex flex-col items-center py-3 gap-1 border-r border-border/50 bg-card/40 flex-shrink-0">
-      {/* Nav items */}
-      <nav className="flex flex-col items-center gap-1 flex-1">
-        {NAV_ITEMS.map((item) => (
-          <SidebarButton
-            key={item.id}
-            item={item}
-            isActive={activeView === item.id}
-            onClick={() => setActiveView(item.id)}
-          />
-        ))}
-      </nav>
-
-      {/* Bottom: status + settings */}
-      <div className="flex flex-col items-center gap-2">
-        {/* Connection status */}
-        <div
+    <nav className="w-14 flex flex-col items-center py-3 gap-1 bg-surface-950 border-r border-white/5">
+      {NAV_ITEMS.map(({ id, icon: Icon, label }) => (
+        <button
+          key={id}
+          onClick={() => setActiveView(id as any)}
+          title={label}
           className={cn(
-            "w-8 h-8 rounded-lg flex items-center justify-center",
-            onlineCount > 0 ? "text-green-400" : "text-gray-600"
+            'relative w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-150 group',
+            activeView === id
+              ? 'bg-brand-500/20 text-brand-400'
+              : 'text-white/30 hover:text-white/70 hover:bg-white/5'
           )}
-          title={`${onlineCount} compte(s) en ligne`}
         >
-          {onlineCount > 0 ? (
-            <Wifi className="w-4 h-4" />
-          ) : (
-            <WifiOff className="w-4 h-4" />
+          <Icon size={18} />
+          {activeView === id && (
+            <motion.div
+              layoutId="sidebar-indicator"
+              className="absolute left-0 w-0.5 h-5 bg-brand-500 rounded-r-full"
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            />
           )}
+        </button>
+      ))}
+
+      <div className="flex-1" />
+
+      <div className="flex flex-col items-center gap-1 text-xs">
+        <div className="w-8 h-8 rounded-lg bg-surface-800 flex flex-col items-center justify-center gap-0.5">
+          <span className="text-accent-success font-bold leading-none">{onlineCount}</span>
+          <span className="text-white/20 leading-none" style={{ fontSize: 8 }}>online</span>
         </div>
-
-        <SidebarButton
-          item={{ id: "settings", icon: Settings, label: "Paramètres" }}
-          isActive={activeView === "settings"}
-          onClick={() => setActiveView("settings")}
-        />
+        {combatCount > 0 && (
+          <div className="w-8 h-8 rounded-lg bg-accent-danger/20 flex flex-col items-center justify-center gap-0.5 animate-pulse">
+            <span className="text-accent-danger font-bold leading-none">{combatCount}</span>
+            <span className="text-accent-danger/70 leading-none" style={{ fontSize: 8 }}>combat</span>
+          </div>
+        )}
       </div>
-    </aside>
-  );
-}
-
-function SidebarButton({
-  item,
-  isActive,
-  onClick,
-}: {
-  item: NavItem;
-  isActive: boolean;
-  onClick: () => void;
-}) {
-  const Icon = item.icon;
-
-  return (
-    <button
-      onClick={onClick}
-      title={item.label}
-      className={cn(
-        "relative w-10 h-10 rounded-xl flex items-center justify-center",
-        "transition-all duration-150",
-        isActive
-          ? "bg-primary/15 text-primary shadow-sm shadow-primary/20"
-          : "text-muted-foreground hover:text-foreground hover:bg-muted/80"
-      )}
-    >
-      <Icon className="w-4.5 h-4.5" />
-      {item.badge !== undefined && item.badge > 0 && (
-        <span className="absolute top-1 right-1 w-4 h-4 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
-          {item.badge > 9 ? "9+" : item.badge}
-        </span>
-      )}
-      {isActive && (
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-primary rounded-r-full" />
-      )}
-    </button>
-  );
+    </nav>
+  )
 }

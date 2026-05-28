@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <StartupObject>Ovvycmb.App.Program</StartupObject>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ovvycmb.Core\Ovvycmb.Core.csproj" />
+    <ProjectReference Include="..\Ovvycmb.Storage\Ovvycmb.Storage.csproj" />
+    <ProjectReference Include="..\Ovvycmb.WindowManager\Ovvycmb.WindowManager.csproj" />
+    <ProjectReference Include="..\Ovvycmb.Hotkeys\Ovvycmb.Hotkeys.csproj" />
+    <ProjectReference Include="..\Ovvycmb.Ipc\Ovvycmb.Ipc.csproj" />
+    <ProjectReference Include="..\Ovvycmb.Services\Ovvycmb.Services.csproj" />
+    <ProjectReference Include="..\Ovvycmb.AI\Ovvycmb.AI.csproj" />
+    <ProjectReference Include="..\Ovvycmb.Plugins\Ovvycmb.Plugins.csproj" />
+    <ProjectReference Include="..\Ovvycmb.Overlay\Ovvycmb.Overlay.csproj" />
+    <ProjectReference Include="..\Ovvycmb.Telemetry\Ovvycmb.Telemetry.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Serilog.Extensions.Hosting" />
+  </ItemGroup>
+</Project>

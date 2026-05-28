@@ -1,105 +1,78 @@
-import { create } from "zustand";
-import { invoke } from "@tauri-apps/api/core";
-import type { Account, AppView, LayoutProfile, MonitorInfo } from "@/types";
+import { create } from 'zustand'
+import type { Account, AgentReport, DomainEvent, LayoutProfile, PluginManifest } from '@/types'
 
-interface AppStore {
+type View = 'dashboard' | 'layout' | 'agents' | 'plugins' | 'settings'
+
+interface AppState {
   // Navigation
-  activeView: AppView;
-  setActiveView: (view: AppView) => void;
+  activeView: View
+  setActiveView: (view: View) => void
 
   // Accounts
-  accounts: Account[];
-  fetchAccounts: () => Promise<void>;
-  addAccount: (name: string, gameType: string) => Promise<void>;
-  removeAccount: (id: string) => Promise<void>;
-  focusAccount: (id: string) => Promise<void>;
+  accounts: Account[]
+  setAccounts: (accounts: Account[]) => void
+  updateAccount: (id: string, data: Partial<Account>) => void
+  focusedAccountId: string | null
+  setFocusedAccount: (id: string | null) => void
 
-  // Layout
-  profiles: LayoutProfile[];
-  monitors: MonitorInfo[];
-  fetchProfiles: () => Promise<void>;
-  fetchMonitors: () => Promise<void>;
-  applyProfile: (id: string) => Promise<void>;
-  scanWindows: () => Promise<void>;
+  // Layouts
+  layouts: LayoutProfile[]
+  setLayouts: (layouts: LayoutProfile[]) => void
 
-  // System
-  isLoading: boolean;
-  error: string | null;
-  clearError: () => void;
+  // Events
+  events: DomainEvent[]
+  addEvent: (event: DomainEvent) => void
+  clearEvents: () => void
+
+  // Agents
+  agentReports: AgentReport[]
+  setAgentReports: (reports: AgentReport[]) => void
+  runningAgents: Set<string>
+  setAgentRunning: (agentType: string, running: boolean) => void
+
+  // Plugins
+  plugins: PluginManifest[]
+  setPlugins: (plugins: PluginManifest[]) => void
+
+  // Connection
+  isConnected: boolean
+  setConnected: (connected: boolean) => void
 }
 
-export const useAppStore = create<AppStore>((set, get) => ({
-  activeView: "dashboard",
+export const useAppStore = create<AppState>((set) => ({
+  activeView: 'dashboard',
   setActiveView: (view) => set({ activeView: view }),
 
   accounts: [],
-  fetchAccounts: async () => {
-    try {
-      const accounts = await invoke<Account[]>("list_accounts");
-      set({ accounts });
-    } catch (e) {
-      set({ error: String(e) });
-    }
-  },
-  addAccount: async (name, gameType) => {
-    try {
-      const account = await invoke<Account>("add_account", { name, gameType });
-      set((s) => ({ accounts: [...s.accounts, account] }));
-    } catch (e) {
-      set({ error: String(e) });
-    }
-  },
-  removeAccount: async (id) => {
-    try {
-      await invoke("remove_account", { id });
-      set((s) => ({ accounts: s.accounts.filter((a) => a.id !== id) }));
-    } catch (e) {
-      set({ error: String(e) });
-    }
-  },
-  focusAccount: async (id) => {
-    try {
-      await invoke("focus_account", { id });
-    } catch (e) {
-      set({ error: String(e) });
-    }
-  },
+  setAccounts: (accounts) => set({ accounts }),
+  updateAccount: (id, data) =>
+    set((state) => ({
+      accounts: state.accounts.map((a) => (a.id === id ? { ...a, ...data } : a)),
+    })),
+  focusedAccountId: null,
+  setFocusedAccount: (id) => set({ focusedAccountId: id }),
 
-  profiles: [],
-  monitors: [],
-  fetchProfiles: async () => {
-    try {
-      const profiles = await invoke<LayoutProfile[]>("list_profiles");
-      set({ profiles });
-    } catch (e) {
-      set({ error: String(e) });
-    }
-  },
-  fetchMonitors: async () => {
-    try {
-      const monitors = await invoke<MonitorInfo[]>("get_monitors");
-      set({ monitors });
-    } catch (e) {
-      set({ error: String(e) });
-    }
-  },
-  applyProfile: async (id) => {
-    try {
-      await invoke("apply_profile", { profileId: id });
-    } catch (e) {
-      set({ error: String(e) });
-    }
-  },
-  scanWindows: async () => {
-    try {
-      await invoke("scan_windows");
-      await get().fetchAccounts();
-    } catch (e) {
-      set({ error: String(e) });
-    }
-  },
+  layouts: [],
+  setLayouts: (layouts) => set({ layouts }),
 
-  isLoading: false,
-  error: null,
-  clearError: () => set({ error: null }),
-}));
+  events: [],
+  addEvent: (event) =>
+    set((state) => ({ events: [event, ...state.events].slice(0, 200) })),
+  clearEvents: () => set({ events: [] }),
+
+  agentReports: [],
+  setAgentReports: (reports) => set({ agentReports: reports }),
+  runningAgents: new Set(),
+  setAgentRunning: (agentType, running) =>
+    set((state) => {
+      const next = new Set(state.runningAgents)
+      if (running) next.add(agentType) else next.delete(agentType)
+      return { runningAgents: next }
+    }),
+
+  plugins: [],
+  setPlugins: (plugins) => set({ plugins }),
+
+  isConnected: false,
+  setConnected: (isConnected) => set({ isConnected }),
+}))

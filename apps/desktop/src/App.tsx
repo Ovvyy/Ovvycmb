@@ -1,22 +1,46 @@
-import { useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { TitleBar } from "@/components/layout/TitleBar";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Dashboard } from "@/components/dashboard/Dashboard";
-import { AccountPanel } from "@/components/layout/AccountPanel";
-import { LayoutManager } from "@/components/layout/LayoutManager";
-import { Settings } from "@/components/settings/Settings";
-import { AgentsPanel } from "@/components/layout/AgentsPanel";
-import { PluginsPanel } from "@/components/layout/PluginsPanel";
-import { useAppStore } from "@/stores/appStore";
-import { useEventBus } from "@/hooks/useEventBus";
+import { useEffect } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useAppStore } from './stores/appStore'
+import { useSignalR } from './hooks/useSignalR'
+import { api } from './api/apiClient'
+import { Sidebar } from './components/layout/Sidebar'
+import { TitleBar } from './components/layout/TitleBar'
+import { Dashboard } from './components/dashboard/Dashboard'
+import { LayoutManager } from './components/layout/LayoutManager'
+import { AgentsPanel } from './components/layout/AgentsPanel'
+import { PluginsPanel } from './components/layout/PluginsPanel'
+import { Settings } from './components/settings/Settings'
 
 export default function App() {
-  const { activeView } = useAppStore();
-  useEventBus();
+  const { activeView, setAccounts, setLayouts, setAgentReports } = useAppStore()
+  useSignalR()
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [accounts, layouts] = await Promise.all([
+          api.accounts.list(),
+          api.layouts.list(),
+        ])
+        setAccounts(accounts)
+        setLayouts(layouts)
+      } catch (err) {
+        console.error('Failed to load initial data:', err)
+      }
+    }
+    loadData()
+  }, [])
+
+  const views: Record<string, React.ReactNode> = {
+    dashboard: <Dashboard />,
+    layout: <LayoutManager />,
+    agents: <AgentsPanel />,
+    plugins: <PluginsPanel />,
+    settings: <Settings />,
+  }
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden">
+    <div className="flex flex-col h-full bg-surface-900 text-white overflow-hidden">
       <TitleBar />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
@@ -24,22 +48,17 @@ export default function App() {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeView}
-              initial={{ opacity: 0, y: 4 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.15, ease: "easeOut" }}
-              className="h-full"
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.15, ease: 'easeOut' }}
+              className="h-full overflow-y-auto"
             >
-              {activeView === "dashboard" && <Dashboard />}
-              {activeView === "accounts" && <AccountPanel />}
-              {activeView === "layout" && <LayoutManager />}
-              {activeView === "agents" && <AgentsPanel />}
-              {activeView === "plugins" && <PluginsPanel />}
-              {activeView === "settings" && <Settings />}
+              {views[activeView]}
             </motion.div>
           </AnimatePresence>
         </main>
       </div>
     </div>
-  );
+  )
 }
