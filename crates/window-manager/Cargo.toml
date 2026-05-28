@@ -1,0 +1,17 @@
+[package]
+name = "ovvy-window-manager"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+ovvy-core = { path = "../core" }
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+async-trait.workspace = true
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows.workspace = true

@@ -1,0 +1,18 @@
+[package]
+name = "ovvy-ai-agents"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+ovvy-core = { path = "../core" }
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+async-trait.workspace = true
+reqwest.workspace = true
+futures.workspace = true
+uuid.workspace = true
+chrono.workspace = true

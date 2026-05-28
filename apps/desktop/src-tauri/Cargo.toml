@@ -1,0 +1,41 @@
+[package]
+name = "ovvycmb-desktop"
+version.workspace = true
+edition.workspace = true
+
+[lib]
+name = "ovvycmb_desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[dependencies]
+ovvy-core = { path = "../../../crates/core" }
+ovvy-window-manager = { path = "../../../crates/window-manager" }
+ovvy-hotkeys = { path = "../../../crates/hotkeys" }
+ovvy-storage = { path = "../../../crates/storage" }
+ovvy-ipc = { path = "../../../crates/ipc" }
+ovvy-telemetry = { path = "../../../crates/telemetry" }
+ovvy-ai-agents = { path = "../../../crates/ai-agents" }
+ovvy-plugin-sdk = { path = "../../../crates/plugin-sdk" }
+ovvy-ocr = { path = "../../../crates/ocr" }
+
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+tauri-plugin-shell = "2"
+tauri-plugin-notification = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-single-instance = "2"
+tauri-plugin-global-shortcut = "2"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows.workspace = true
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }

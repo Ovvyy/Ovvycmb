@@ -1,0 +1,29 @@
+[package]
+name = "ovvycmb-daemon"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "ovvycmb-daemon"
+path = "src/main.rs"
+
+[dependencies]
+ovvy-core = { path = "../../crates/core" }
+ovvy-window-manager = { path = "../../crates/window-manager" }
+ovvy-hotkeys = { path = "../../crates/hotkeys" }
+ovvy-storage = { path = "../../crates/storage" }
+ovvy-ipc = { path = "../../crates/ipc" }
+ovvy-telemetry = { path = "../../crates/telemetry" }
+ovvy-ai-agents = { path = "../../crates/ai-agents" }
+ovvy-plugin-sdk = { path = "../../crates/plugin-sdk" }
+ovvy-ocr = { path = "../../crates/ocr" }
+
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+directories.workspace = true
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows.workspace = true

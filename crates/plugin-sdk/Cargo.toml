@@ -1,0 +1,17 @@
+[package]
+name = "ovvy-plugin-sdk"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+ovvy-core = { path = "../core" }
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+async-trait.workspace = true
+wasmtime.workspace = true
+tokio.workspace = true
+uuid.workspace = true
+chrono.workspace = true

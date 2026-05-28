@@ -1,0 +1,108 @@
+[workspace]
+resolver = "2"
+members = [
+    "apps/desktop/src-tauri",
+    "apps/overlay",
+    "apps/daemon",
+    "crates/core",
+    "crates/window-manager",
+    "crates/hotkeys",
+    "crates/ocr",
+    "crates/vision",
+    "crates/ipc",
+    "crates/storage",
+    "crates/telemetry",
+    "crates/plugin-sdk",
+    "crates/ai-agents",
+    "plugins/dofus-unity",
+    "plugins/dofus-retro",
+    "plugins/wakfu",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Ovvycmb Team"]
+license = "MIT"
+rust-version = "1.80"
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1.40", features = ["full"] }
+tokio-util = "0.7"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+
+# Logging / Tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+tracing-opentelemetry = "0.27"
+opentelemetry = "0.27"
+opentelemetry-otlp = "0.27"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "2.0"
+
+# Async traits
+async-trait = "0.1"
+
+# UUID / time
+uuid = { version = "1.10", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+time = { version = "0.3", features = ["serde"] }
+
+# Database
+sqlx = { version = "0.8", features = ["sqlite", "runtime-tokio", "chrono", "uuid", "migrate"] }
+
+# IPC / networking
+tokio-tungstenite = "0.24"
+axum = { version = "0.7", features = ["ws", "macros"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+
+# Config
+config = "0.14"
+directories = "5.0"
+
+# Windows API
+[target.'cfg(target_os = "windows")'.workspace.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_System_Threading",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_Graphics_Gdi",
+    "Win32_Graphics_Direct2D",
+    "Win32_Graphics_DirectWrite",
+    "Win32_Graphics_Dxgi",
+    "Win32_System_LibraryLoader",
+    "Win32_System_ProcessStatus",
+] }
+
+# AI / Claude
+reqwest = { version = "0.12", features = ["json", "stream"] }
+futures = "0.3"
+
+# Image processing
+image = "0.25"
+
+# Plugins / WASM
+wasmtime = "26"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
+panic = "abort"
+
+[profile.dev]
+opt-level = 0
+debug = true
+
+[profile.bench]
+opt-level = 3

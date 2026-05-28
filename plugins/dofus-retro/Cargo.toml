@@ -1,0 +1,11 @@
+[package]
+name = "plugin-dofus-retro"
+version.workspace = true
+edition.workspace = true
+[lib]
+crate-type = ["cdylib"]
+[dependencies]
+ovvy-plugin-sdk = { path = "../../crates/plugin-sdk" }
+ovvy-core = { path = "../../crates/core" }
+serde.workspace = true
+anyhow.workspace = true

@@ -1,0 +1,13 @@
+[package]
+name = "ovvy-vision"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+ovvy-core = { path = "../core" }
+ovvy-ocr = { path = "../ocr" }
+tokio.workspace = true
+serde.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+image.workspace = true
